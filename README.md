@@ -1,41 +1,52 @@
 # theCoders Cases
 
-Simulador de cases em grupo para pessoas que estão iniciando na área de TI e querem treinar para entrevistas técnicas, praticando cases reais antes do processo seletivo de verdade.
+## 📋 Sobre o Projeto
 
-## Sobre o projeto
+O **theCoders Cases** é um simulador de cases em grupo voltado para pessoas iniciantes em TI (nível Estagiário e Junior) que estão se preparando para entrevistas de emprego. A aplicação recria a experiência de participar de um desafio técnico/comportamental em equipe, com tempo cronometrado, e ao final oferece uma avaliação de desempenho baseada em IA.
 
-O theCoders Cases coloca o candidato para resolver, em grupo, cases parecidos com os que costumam aparecer em processos seletivos de TI. Ao final de cada case, uma IA faz uma avaliação de desempenho individual, servindo como apoio educacional, sem substituir a avaliação de um profissional real. Os resultados são confidenciais e visíveis somente para o próprio candidato.
+**Dor de mercado resolvida:** candidatos iniciantes em TI frequentemente chegam a processos seletivos sem nunca terem vivenciado a dinâmica real de um "case" em grupo — um formato comum em entrevistas técnicas e de trainee. Faltam ambientes de prática realistas, com feedback estruturado, que ajudem essas pessoas a chegar mais preparadas e confiantes nas entrevistas de verdade.
 
-## Telas do aplicativo
+## 🛠️ Stack Utilizada
 
-- **Login** — e-mail/senha, criar conta, esqueci a senha, login com Google e com Github
-- **Cadastro** — seleção de nível de expertise, nome completo, e-mail, senha e nível de XP inicial
-- **Tutorial** — apresentação do app, explicação de como funciona o case, confidencialidade/avaliação por IA e sistema de níveis
-- **Tela inicial** — botão "Começar", "Meus resultados", perfil, menu, nível atual, e tutorial exibido no primeiro login
-- **Case** — temporizador aberto, exibição em tela cheia, chat entre os participantes
-- **Avaliação/Tela final** — compara a resposta do usuário com a resposta oficial, mostra animação de nível, feedback simulado por IA, e botão para voltar ao lobby
+- **React** — biblioteca para construção da interface
+- **Vite** — ferramenta de build e ambiente de desenvolvimento
+- **JavaScript** — linguagem principal do front-end
+- **React Router (react-router-dom)** — navegação entre telas
+- **Axios** — requisições HTTP para o back-end
+- **ESLint** — padronização e análise de qualidade do código
 
-## Sistema de níveis
+## 💻 Instalação e Execução Local
 
-O candidato começa como **Estagiário** e ganha XP conforme completa cases. Ao acumular XP suficiente, sobe automaticamente para **Junior**, desbloqueando os cases difíceis.
+Pré-requisito: ter o [Node.js](https://nodejs.org) instalado.
 
-Dificuldade dos cases por quantidade de participantes:
-- Fácil — 3 pessoas
-- Médio — 5 pessoas
-- Difícil — 5 pessoas
+```bash
+# Clonar o repositório
+git clone <url-do-repositorio>
 
-## Fluxo do case
+# Entrar na pasta do projeto
+cd thecoders-cases
 
-Ao clicar em "Começar", o candidato é redirecionado automaticamente para a sala de case mais adequada ao seu nível de expertise. O case abre em tela cheia e o tempo é de uso livre, a sugestão é dividir entre leitura, compreensão, divisão de tarefas e apresentação. Ao fim do tempo, o case encerra e a IA avalia cada participante individualmente.
+# Instalar as dependências
+npm i
 
-## Equipe
+# Rodar o servidor de desenvolvimento
+npm run dev
+```
 
-- **Matheus** — telas de cadastro e recuperar senha
-- **Rhaísa** — tutorial, carrossel e explicação de confidencialidade
-- **Laís** — lobby/case e resultado final
+Após rodar o último comando, o projeto estará disponível em `http://localhost:5173`.
 
-## Próximas atualizações
+## 🔗 Links
 
-- Chat de voz
-- Câmera
-- Advertência ao sair da tela cheia
+- Figma: [link do Figma]
+- Deploy: [link do deploy]
+- Notion: [link do Notion]
+
+## 🤖 Inteligências Artificiais Utilizadas
+
+- **[Nome da IA]** — utilizada para [finalidade, ex: geração/estruturação dos cases, avaliação de desempenho do candidato ao final da simulação]
+
+## 👥 Equipe e Responsabilidades
+
+- **Matheus** — telas de Cadastro e Recuperação de Senha
+- **Rhaísa** — Tutorial, carrossel de introdução e explicação de confidencialidade
+- **Laís** — telas de Lobby/Case e Resultado Final
