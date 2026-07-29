@@ -1,24 +1,24 @@
 .nivel-card {
 	display: flex;
-    width: 8rem;
-    height: 8rem;
-    padding-bottom: 1rem;
+    width: 2rem;
+    height: 2rem;
+    padding-bottom: 0.25rem;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    border-radius: 2rem;
-    border: 4px solid var(--cor-primaria);  
+    border-radius: 0.5rem;
+    border: 2px solid var(--cor-primaria);
 }
 
 .nivel-letra {
-	color: var(--cor-primaria);
+	width: 1.5rem;
+    color: var(--cor-primaria);
     text-align: center;
-    -webkit-text-stroke-width: 4px;
+    -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: var(--cor-primaria);
     font-family: Michroma;
-    font-size: 6rem;
+    font-size: 1.5rem;
     font-style: normal;
     font-weight: 400;
-    line-height: 6rem; /* 100% */
-    width: 6rem;
+    line-height: 1.5rem; /* 100% */
 }
