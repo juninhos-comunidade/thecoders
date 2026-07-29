@@ -1,57 +1,86 @@
-import logo from "../../assets/logo.svg";
 import { useState } from "react";
+import btnApple from "../../assets/btnApple.svg";
+import btnGoogle from "../../assets/btnGoogle.svg";
+import btnLinkedIn from "../../assets/btnLinkedIn.svg";
+import logo from "../../assets/logo.svg";
+import "./index.css";
 
-// import { useLocation } from "react-router-dom";
+const REDES = [
+	{nome: "Google", icone: <img src={btnGoogle} alt="Google" /> },
+	{nome: "Apple", icone: <img src={btnApple} alt="Apple" /> },
+	{nome: "LinkedIn", icone: <img src={btnLinkedIn} alt="LinkedIn" /> },
+];
 
 export default function Login() {
-	// const navigate = useLocation();
+	const [email, setEmail] = useState("");
+	const [senha, setSenha] = useState("");
 
-	const [email, setEmail] = useState("admin@admin.com");
-	const [senha, setSenha] = useState("123456");
-
-	const autenticar = () => {
+	const autenticar = (e) => {
+		e.preventDefault();
+		console.log({ email, senha });
 	};
 
 	return (
-		<div className="caixa-login">
-			<div className="logo">
-				<img src={logo} alt="Logo" />
-			</div>
+		<div className="pagina-login">
+			<section className="coluna-apresentacao">
+				<div className="marca">
+					<img src={logo} alt="theCoders" className="marca-logo" />
+					<span className="marca-nome">
+						
+					</span>
+				</div>
 
-			<div className="titulo-login">
-				<h1>Bem-vind@!</h1>
-				<p>Acesse sua conta e continue sua jornada.</p>
-			</div>
+				<h1>
+					Resolva desafios
+					<br />
+					Evolua como desenvolvedor
+				</h1>
+				<p>Resolva cases reais de tecnologia, receba avaliações e se desenvolva para o mercado.</p>
+				
+			</section>
 
-			
+			<section className="coluna-login">
+				<div className="card-login">
+					<h2>Login</h2>
+					<p className="subtitulo">se conecte com</p>
 
-			<div className="grupo">
-				<label htmlFor="email">E-mail</label>
-				<input
-					id="email"
-					value={email}
-					onChange={(e) => setEmail(e.target.value)}
-					type="text"
-					placeholder="Digite seu e-mail"
-				/>
-			</div>
+					<div className="botoes-sociais">
+						{REDES.map(({ nome, icone }) => (
+							<button key={nome} type="button" onClick={() => console.log(`Login com ${nome}`)}>
+								{icone}
+								{nome}
+							</button>
+						))}
+					</div>
 
-			<div className="grupo">
-				<label htmlFor="senha">Senha</label>
-				<input
-					id="senha"
-					value={senha}
-					onChange={(e) => setSenha(e.target.value)}
-					type="password"
-					placeholder="Digite sua senha"
-				/>
-			</div>
+					<div className="divisor">
+						<span>ou</span>
+					</div>
 
-			<div className="btn-entrar">
-				<button id="btn-entrar" onClick={autenticar}>
-					Entrar
-				</button>
-			</div>
+					<form onSubmit={autenticar}>
+						<input
+							type="email"
+							placeholder="E-mail"
+							value={email}
+							onChange={(e) => setEmail(e.target.value)}
+							autoComplete="username"
+						/>
+						<input
+							type="password"
+							placeholder="Senha"
+							value={senha}
+							onChange={(e) => setSenha(e.target.value)}
+							autoComplete="current-password"
+						/>
+						<button type="submit" className="btn-entrar">Entrar</button>
+					</form>
+
+					<div className="links-auxiliares">
+						<p>Esqueceu sua senha? <a href="/recuperar">Recupere</a></p>
+						<p>Não tem uma conta? <a href="/cadastro">Cadastre-se</a></p>
+					</div>
+				</div>
+			</section>
 		</div>
 	);
 }
