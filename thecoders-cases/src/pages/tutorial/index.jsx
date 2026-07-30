@@ -1,5 +1,6 @@
 import logo from "../../assets/logo.svg";
 import { useState } from "react";
+import "./index.css"
 
 const slides = [
     {titulo: "Boas vindas ao theCoders Cases!", texto: "Esse espaço foi pensado especialmente para quem está começando na área de TI e quer treinar na prática. Aqui você vai simular cases reais, em grupo, como os que costumam aparecer em processos seletivos, uma forma de ganhar confiança e experiência antes da entrevista de verdade."},
