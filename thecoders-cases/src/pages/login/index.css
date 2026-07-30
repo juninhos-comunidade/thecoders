@@ -1,0 +1,280 @@
+
+@import url("https://fonts.googleapis.com/css2?family=Michroma&family=Inter:wght@400;500;600;700&display=swap");
+
+.pagina-login {
+  display: flex;
+  min-height: 100vh;
+  background: #fff;
+  font-family: "Inter", sans-serif;
+}
+
+.coluna-apresentacao {
+    flex:1;
+    max-width:600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4rem 5vw;
+}
+
+.marca {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 3rem;
+}
+
+.marca-nome {
+    display: flex;
+    flex-direction: column;
+    line-height: normal;
+    font-family: "Michroma", sans-serif;
+    font-size: 41px;
+    color: #213a57;
+}
+.marca-nome strong {
+    font-family: "Michroma", sans-serif;
+    font-size: 30px;
+    font-weight: 400;
+    color: rgba(30,30,30,0.85);
+}
+
+
+.coluna-apresentaçao h1 {
+    max-width: 543px;
+    font-size: 36px;
+    font-weight: 600;
+    line-height: normal;
+    color: #0f3a6e;
+    margin-bottom: 1.25rem;
+}
+
+
+.coluna-apresentaçao p {
+    max-width: 546px;
+    font-size: 36px;
+    font-weight: 600;
+    line-height: normal;
+    color: #0f3a6e;
+    margin-bottom: 1.25rem;
+
+}
+
+
+.ilustracao {
+    width:381.98px;
+    aspect-ratio: 148 / 105;
+    max-width: 100%;
+}
+
+
+.coluna-login {
+    flex:1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f6f8fc;
+    padding: 2rem;
+}
+
+.card-login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    padding: 24px;
+    width: 100%;
+    max-width: 380px;
+    background: rgba(65,168,234,0.16);
+    border-radius: 24px;
+    box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.card-login h2 {
+    font-size: 24px;
+    font-weight: 500;
+    color: #213a57;
+    line-height: 20px;
+    letter-spacing: 0.1px;
+    margin:0;
+}
+
+.card-login .subtitulo {
+    font-size: 16px;
+    font-weight: 500;
+    color: #213a57;
+    line-height: 20px;
+    letter-spacing: 0.1px;
+    margin:0;
+}
+
+
+.botoes.sociais {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+}
+
+.botoes.sociais button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap:8px;
+    height:48px;
+    padding: 10px 16px;
+    border: 1px solid rgba(29, 29, 29, 0.25);
+    border-radius: 8px;
+    background: #fff;
+    font-size: 13px;
+    font-weight: 500;
+    color:#213a57;
+    cursor:pointer;
+    transition:border-color 0.15s, transform 0.15s;
+}
+
+.botoes.sociais button:hover {
+    border-color: #3b5bdb;
+    transform: translateY(-1px);
+}
+
+.icone-social {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+}
+
+
+.divisor {
+    display: flex;
+    align-items: center;
+    color: #9aa5ba;
+    font-size: 13px;
+    width: 100%;
+    padding: 0 24px;
+}
+
+.divisor::before,
+.divisor::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: rgba (29,29,29,0.25);
+}
+
+.divisor span {
+    padding: 0 0.75rem;
+}
+
+
+.card-login form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    align-self: stretch;
+    gap: 24px;
+    padding: 0 24px;
+}
+
+.card-login input {
+    width:348px;
+    height: 32px;
+    max-width: 100%;
+    padding: 6px 12px;
+    border: 1px solid rgba(29, 29, 29, 0.25);
+    border-radius: 8px;
+    font-family: "Inter", sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 20px;
+    letter-spacing: 0.1px;
+    color: rgba(29, 29, 29, 0.6);
+    outline: none;
+    transition: boorder-color 0.15s;
+}
+
+.card-login input:focus {
+    border-color: #41a8ea;
+}
+
+.card-login input::placeholder {
+    color: rgba(29, 29, 29, 0.6);
+}
+
+.btn-entrar {
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 48px;
+    align-self: stretch;
+    padding: 10px 16px;
+    border:none;
+    border-radius: 100px;
+    background: #213a57;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 20px;
+    letter-spacing: 0.1px;
+    cursor:pointer;
+    transition: background 0.15s
+}
+
+.btn-entrar:hover {
+    background: #16223c;
+}
+
+
+.links-auxiliares {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    align-self: stretch;
+    padding: 0 24px;
+}
+    
+.links-auxiliares p {
+    width: 100%;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 20px;
+    letter-spacing: 0.1px;
+    text-align: center;
+    color: rgba (33,58,87,0.5);
+    margin: 0;
+}
+
+.links-auxiliares a {
+    color: rgba(33,58,87,0.5);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.links-auxiliares a:hover {
+    text-decoration: underline;
+}
+
+
+@media (max-width: 900px) {
+    .pagina-login {
+        flex-direction: column;
+    }
+
+    .coluna-apresentacao {
+        max-width: 100%;
+        text-align: center;
+        align-items: center;
+        padding: 2.5rem 1.5rem 1.5rem;
+    }
+
+    .marca {
+        justify-content: center;
+	}
+	.coluna-login {
+		padding: 1.5rem;
+	}
+}
+   
