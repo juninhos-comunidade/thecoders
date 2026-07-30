@@ -12,18 +12,45 @@ const slides = [
 
 
 
-function Tutorial () {
+function Tutorial () { const [slideIndex, setSlideIndex] = useState(0);
+    const currentSlide = slides[slideIndex];
     return (
         <div className="tutorial-container"> {/*englobará tudo: card, botoes, etc*/}
+            <button onClick ={ () => {
+                if (slideIndex < 4) {
+                setSlideIndex(slideIndex + 1);
+                }
+            
+            }}
+            >avançar</button>
+
+            <button onClick ={ () => 
+                {
+                    if (slideIndex > 0) {
+                        setSlideIndex(slideIndex - 1);
+                }
+                }}>voltar</button>
 
             <div className="card-tutorial"> {/*englobará o card que contém o tutorial*/}
-
+                
                 <div className="card-tutorial-header">
                     <span className="dot dot-red"></span> {/*bolinhas coloridas da parte superior do card*/}
                     <span className="dot dot-yellow"></span>
                     <span className="dot dot-green"></span>
-                </div>
+                </div> 
+            
+            <h2>{currentSlide.titulo}</h2>
+            <p>{currentSlide.texto}</p>  
+            
             </div>
+
+             <div className="progress-bar-tutorial">
+
+                {slides.map ((slide, i) => <span className="progress-dot" key={i}></span> ) }
+             </div>
+
+            <img src={logo} alt="theCoders Cases"/>
+        
         </div>
 
     );
