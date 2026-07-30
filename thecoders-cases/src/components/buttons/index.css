@@ -47,3 +47,22 @@ button:disabled .content {
 button:disabled .button-text {
     color: #A3A3A3;
 }
+
+/* Hover */
+button:not(:disabled):hover .state-layer {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.btn-primary--white:not(:disabled):hover .state-layer {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+/* Clique */
+button:not(:disabled):active .state-layer {
+    transform: scale(0.97);
+    background: rgba(255, 255, 255, 0.16);
+}
+
+.btn-primary--white:not(:disabled):active .state-layer {
+    background: rgba(0, 0, 0, 0.10);
+}
