@@ -3,7 +3,7 @@ import ProfileIcon from "../profile-icon";
 import Nivel from "../niveis";
 import logo from "../../assets/logo.svg";
 
-export default function Navbar() {
+export default function Navbar({ nivel }) {
 	return (
 		<nav className="navbar">
 			<div className="left">
@@ -13,7 +13,7 @@ export default function Navbar() {
 			</div>
 
 			<div className="right">
-				<Nivel item={{ nivel: "E" }} />
+				<Nivel level={nivel} /> 
 				<ProfileIcon />
 			</div>
 		</nav>
