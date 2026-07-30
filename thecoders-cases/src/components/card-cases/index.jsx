@@ -24,8 +24,8 @@ export default function CardCases({ num, dificult, limit }) {
                 </div>
             </div>
             <div className="buttons">
-                <Buttons label="Último Resultado" variant="white" disabled={true} />
-                <Buttons label="Iniciar Case" />
+                <Buttons label="Último Resultado" variant="white" disabled={false} page="/last-result" />
+                <Buttons label="Iniciar Case" page="/on-case" />
             </div>
         </div>
     );
