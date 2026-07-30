@@ -2,6 +2,7 @@ import "./index.css";
 import "../../App.css";
 import Navbar from "../../components/navbar";
 import CardProfile from "../../components/card-profile";
+import CardCases from "../../components/card-cases";
 
 // import { useNavigate } from "react-router-dom";
 
@@ -20,6 +21,7 @@ export default function Lobby() {
 
                 <div className="cards">
                     <CardProfile nivel="Estagiário" exp="0" nextLevel="Júnior" />
+                    <CardCases num="0" dificult="🟢 Fácil" limit="10" />
                 </div>
             </div>
         </>
