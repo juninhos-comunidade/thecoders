@@ -8,8 +8,8 @@
 :root {
 	--cor-primaria: #213A57;
 	--cor-secundaria: #E0F1FB;;
-    --cor-font-primaria: var(--cor-primaria);
-    --cor-font-secundaria: #1D1D1D;
+  --cor-font-primaria: var(--cor-primaria);
+  --cor-font-secundaria: #1D1D1D;
 	--cor-background: #FFFFFF;
 }
 
@@ -20,4 +20,131 @@
 	box-sizing: border-box;
 	outline: none;
 	font-family: "Inter", sans-serif;
+}
+
+/* ==========================================
+   FONTES
+========================================== */
+
+:root {
+  /* Font Families */
+  --font-logo: "Michroma", sans-serif;
+  --font-primary: "Inter", sans-serif;
+
+  /* Font Weights */
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+
+  /* Font Sizes */
+  --fs-h1: 2.25rem;      /* 36px */
+  --fs-h2: 1.875rem;     /* 30px */
+  --fs-h3: 1.5rem;       /* 24px */
+  --fs-title: 1.25rem;   /* 20px */
+  --fs-text: 1rem;       /* 16px */
+  --fs-description: 0.875rem; /* 14px */
+  --fs-button: 0.875rem; /* 14px */
+  --fs-label: 0.8125rem; /* 13px */
+
+  /* Line Heights */
+  --lh-heading: 1.2;
+  --lh-title: 1.3;
+  --lh-body: 1.6;
+  --lh-small: 1.5;
+}
+
+/* ==========================================
+   HEADINGS
+========================================== */
+
+h1,
+.h1 {
+  font-family: var(--font-primary);
+  font-size: var(--fs-h1);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-heading);
+}
+
+h2,
+.h2 {
+  font-family: var(--font-primary);
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-heading);
+}
+
+h3,
+.h3 {
+  font-family: var(--font-primary);
+  font-size: var(--fs-h3);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-heading);
+}
+
+/* ==========================================
+   TÍTULO
+========================================== */
+
+.title {
+  font-family: var(--font-primary);
+  font-size: var(--fs-title);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-title);
+}
+
+/* ==========================================
+   TEXTO
+========================================== */
+
+.text {
+  font-family: var(--font-primary);
+  font-size: var(--fs-text);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-body);
+}
+
+/* ==========================================
+   DESCRIÇÃO
+========================================== */
+
+.description {
+  font-family: var(--font-primary);
+  font-size: var(--fs-description);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-small);
+}
+
+/* ==========================================
+   BOTÃO
+========================================== */
+
+.button-text {
+  font-family: var(--font-primary);
+  font-size: var(--fs-button);
+  font-weight: var(--fw-medium);
+  line-height: 1;
+}
+
+/* ==========================================
+   LABEL
+========================================== */
+
+.label {
+  font-family: var(--font-primary);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-medium);
+  line-height: 1.4;
+}
+
+/* ==========================================
+   INPUT
+========================================== */
+
+input,
+textarea,
+select {
+  font-family: var(--font-primary);
+  font-size: var(--fs-text);
+  font-weight: var(--fw-regular);
 }
