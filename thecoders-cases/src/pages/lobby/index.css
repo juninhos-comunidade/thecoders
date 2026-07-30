@@ -1,0 +1,26 @@
+.container {
+    display: flex;
+    padding: 5rem 5.125rem 0 5.125rem;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    flex: 1 0 0;
+}
+
+.textos {
+    align-self: stretch;
+}
+
+h3, .title {
+    align-self: stretch;
+    color: var(--cor-primaria);
+}
+
+.cards {
+    display: flex;
+    padding: 2rem 0;
+    justify-content: center;
+    align-items: center;
+    gap: 2.5rem;
+    align-self: stretch;
+}
