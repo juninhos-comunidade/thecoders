@@ -11,9 +11,9 @@ export default function Lobby() {
 
     return (
         <>
-			<Navbar nivel="J" />
+			<Navbar nivel="E" />
 
-            <div className="container">
+            <div className="container-lobby">
                 <div className="textos">
                     <h3>Bem-vindo de volta!</h3>
                     <div className="title">Continue evoluindo resolvendo desafios reais</div>
