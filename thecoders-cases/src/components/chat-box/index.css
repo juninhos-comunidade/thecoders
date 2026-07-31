@@ -1,0 +1,130 @@
+.side-sheet,
+.header-chat,
+.content-chat,
+.actions-chat,
+.text,
+.building-block,
+.building-blocks,
+.message {
+    display: flex;
+}
+
+.side-sheet,
+.content-chat,
+.actions-chat,
+.building-block,
+.building-blocks,
+.message {
+    flex-direction: column;
+}
+
+.header-chat,
+.content-chat,
+.actions-chat,
+.building-block,
+.building-blocks {
+    align-self: stretch;
+}
+
+.side-sheet,
+.header-chat,
+.actions-chat,
+.text {
+    align-items: flex-start;
+}
+
+.side-sheet {
+    width: 20rem;
+    max-width: 25rem;
+    min-height: 100vh;
+    height: 100vh;
+    background: var(--cor-secundaria);
+    border-left: 1px solid #CAC4D0;
+    flex-shrink: 0;
+}
+
+.header-chat {
+    padding: 0.75rem 0.75rem 1rem 1.5rem;
+    border-top: 1px solid #CAC4D0;
+    border-bottom: 1px solid #CAC4D0;
+}
+
+.actions-chat,
+.content-chat,
+.building-block,
+.building-blocks {
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.actions-chat {
+    padding: 0.75rem 1.5rem 1.25rem 1.5rem;
+    gap: 0.5rem;
+    border-top: 1px solid #CAC4D0;
+    width: 100%;
+}
+
+.content-chat,
+.text,
+.building-block,
+.building-blocks {
+    flex: 1 0 0;
+}
+
+.text {
+    padding-top: 0.75rem;
+}
+
+.building-block {
+    padding: 0.625rem;
+    gap: 0.625rem;
+}
+
+.side-sheet,
+.content-chat {
+    min-height: 0;
+}
+
+.side-sheet,
+.actions-chat {
+    margin-top: auto;
+}
+
+.building-blocks {
+    width: 100%;
+    padding: 1rem 0.75rem;
+    gap: 0.75rem;
+    overflow: hidden;
+}
+
+.message {
+    max-width: 85%;
+    width: fit-content;
+    padding: 0.75rem 1rem;
+    border-radius: 1rem 1rem 0.25rem 1rem;
+    background: #ffffff;
+    color: #1D1D1D;
+    text-align: left;
+    font-family: Inter;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.5rem;
+    letter-spacing: 0.00625rem;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    align-self: flex-end;
+}
+
+.message.user {
+    background: #dbeafe;
+    border-radius: 1rem 1rem 0.25rem 1rem;
+    align-self: flex-end;
+    text-align: right;
+}
+
+.message.system {
+    align-self: flex-start;
+    background: #ffffff;
+    border-radius: 1rem 1rem 1rem 0.25rem;
+}
