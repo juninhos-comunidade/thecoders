@@ -8,7 +8,8 @@ export default function SendMsgBar({
     onChange,
     onSubmit,
     buttonLabel = "Enviar",
-    redirectTo = "/last-result",
+    redirectTo,
+    navigateOnSubmit = Boolean(redirectTo),
 }) {
     const navigate = useNavigate();
 
@@ -28,8 +29,18 @@ export default function SendMsgBar({
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        onSubmit?.(currentValue);
-        navigate(redirectTo);
+
+        if (onSubmit) {
+            onSubmit(currentValue);
+        }
+
+        if (value === undefined) {
+            setInternalValue("");
+        }
+
+        if (navigateOnSubmit && redirectTo) {
+            navigate(redirectTo);
+        }
     };
 
     return (
