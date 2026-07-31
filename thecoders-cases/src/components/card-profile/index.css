@@ -1,0 +1,74 @@
+.card-profile {
+    display: flex;
+    width: 22.25rem;
+    padding: 3rem 3rem;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    align-self: stretch;
+    border-radius: 1.5rem;
+    background: var(--cor-secundaria);
+    box-shadow: 4px 4px 4px 0 rgba(0, 0, 0, 0.10);
+}
+
+.text {
+    display: flex;
+    align-items: center;
+    align-self: stretch;
+}
+
+.infos {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 0.25rem;
+    align-self: stretch;
+}
+
+.exp {
+    color: var(--cor-font-secundaria);
+    font-family: Inter;
+    font-size: 0.75rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: var(--Static-Label-Large-Line-Height, 1.25rem); /* 166.667% */
+    letter-spacing: var(--Static-Label-Large-Tracking, 0.00625rem);
+}
+
+.progress-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    align-self: stretch;
+    border-radius: 1rem;
+    background: rgba(29, 29, 29, 0.25);
+}
+
+.progress {
+    width: 3.4rem;
+    height: 1rem;
+    border-radius: 1rem;
+    background: var(--cor-primaria);
+}
+
+.box {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    align-self: stretch;
+}
+
+.next-level, span {
+    color: var(--cor-font-secundaria);
+    font-family: Inter;
+    font-size: 0.75rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: var(--Static-Label-Large-Line-Height, 1.25rem); /* 166.667% */
+    letter-spacing: var(--Static-Label-Large-Tracking, 0.00625rem);
+}
+
+span {
+    font-weight: 700;
+}

@@ -1,0 +1,80 @@
+.send-msg-bar {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 0.5rem 0;
+}
+
+.send-msg-bar__frame {
+    display: flex;
+    width: min(45rem, 100%);
+    min-height: 3.5rem;
+    padding: 0.25rem 0.25rem 0.25rem 0.5rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1.75rem;
+    border: 1px solid rgba(29, 29, 29, 0.15);
+    background: #ffffff;
+    box-shadow: 0 0 0 1px rgba(17, 24, 39, 0.02);
+}
+
+.send-msg-bar__state-layer {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.send-msg-bar__content {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    min-width: 0;
+    padding: 0 0.5rem 0 0.875rem;
+}
+
+.send-msg-bar__input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    color: #1d1d1d;
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.4;
+    padding: 0.875rem 0;
+}
+
+.send-msg-bar__input::placeholder {
+    color: rgba(29, 29, 29, 0.5);
+}
+
+.send-msg-bar__input:focus {
+    outline: none;
+}
+
+.send-msg-bar__button {
+    width: 2.75rem;
+    height: 2.75rem;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.send-msg-bar__button:hover {
+    transform: translateY(-1px);
+}
+
+.send-msg-bar__button:active {
+    transform: translateY(0);
+}
+
+.send-msg-bar__button svg {
+    width: 1.5rem;
+    height: 1.5rem;
+    fill: #49454F;
+    transform: translateX(1px);
+}
