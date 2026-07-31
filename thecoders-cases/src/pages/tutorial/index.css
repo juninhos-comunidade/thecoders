@@ -1,0 +1,77 @@
+.tutorial-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.card-tutorial {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: white;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 2rem;
+  width: 100%;
+  text-align: center;
+  min-height: 350px;
+}
+
+.card-tutorial-header {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.dot {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+}
+
+.dot-red {
+  background-color: #ff5f57;
+}
+
+.dot-yellow {
+  background-color: #ffbd2e;
+}
+
+.dot-green {
+  background-color: #28c840;
+}
+
+.tutorial-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.nav-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: #1e3a5f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-button svg {
+  width: 2rem;
+  height: 2rem;
+}
+
+.nav-button-disabled {
+  opacity: 0.3;
+  cursor: default;
+}
