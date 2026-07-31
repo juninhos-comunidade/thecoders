@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./index.css";
 
 export default function SendMsgBar({
@@ -7,7 +8,10 @@ export default function SendMsgBar({
     onChange,
     onSubmit,
     buttonLabel = "Enviar",
+    redirectTo = "/last-result",
 }) {
+    const navigate = useNavigate();
+
     const [internalValue, setInternalValue] = useState("");
     const currentValue = value !== undefined ? value : internalValue;
 
@@ -25,6 +29,7 @@ export default function SendMsgBar({
     const handleSubmit = (event) => {
         event.preventDefault();
         onSubmit?.(currentValue);
+        navigate(redirectTo);
     };
 
     return (
