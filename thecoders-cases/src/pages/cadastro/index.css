@@ -1,0 +1,214 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.cadastro-wrapper {
+  min-height: 100vh;
+  background-color: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+
+.cadastro-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 16px 64px;
+}
+
+/* Logo "theCoders CASES" */
+.cadastro-logo {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.cadastro-logo h1 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 700;
+  color: #1e2e42;
+  line-height: 1;
+}
+
+.cadastro-logo span {
+  display: block;
+  margin-top: 4px;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 0.25em; 
+  color: #1e2e42;
+}
+
+
+.cadastro-card {
+  width: 100%;
+  max-width: 500px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 36px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.campo label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.campo input {
+  width: 100%; 
+  height: 44px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  padding: 0 14px;
+  font-size: 14px;
+  color: #1e293b;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  box-sizing: border-box;
+  background: #ffffff; 
+}
+
+.campo input::placeholder {
+  color: #94a3b8;
+}
+
+.campo input:focus {
+  border-color: #1e2e42;
+  box-shadow: 0 0 0 2px rgba(30, 46, 66, 0.1);
+}
+
+.campo input:disabled {
+  background: #f1f5f9;
+  color: #94a3b8; 
+  cursor: not-allowed;
+}
+
+.campo-ajuda {
+  margin: 2px 0 0; 
+  font-size: 12px;
+  line-height: 1.4;
+  color: #64748b;
+}
+
+
+.campo input.erro,
+.campo input.campo-com-erro {
+  border-color: #ef4444;
+  background: #fff5f5;
+}
+
+.campo-erro {
+  margin: 2px 0 0;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #ef4444;
+}
+
+/* Checkbox */
+.checkbox-linha {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #1e293b;
+  cursor: pointer;
+  user-select: none;
+  margin-top: -4px;
+}
+
+.checkbox-linha input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #1e2e42;
+  cursor: pointer;
+}
+
+/* Input de Senha + Botão Olho */
+.campo-senha {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.campo-senha input {
+  padding-right: 42px;
+}
+
+.botao-olho {
+  position: absolute;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 4px;
+  color: #94a3b8;
+  cursor: pointer;
+}
+
+.botao-olho:hover {
+  color: #475569;
+}
+
+/* Botão do Formulário */
+.cadastro-acao {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.botao-criar-conta {
+  min-width: 160px;
+  height: 44px;
+  border-radius: 999px;
+  border: none;
+  background: #1e2e42;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 0 32px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+.botao-criar-conta:hover {
+  background: #0f172a;
+}
+
+.botao-criar-conta:active {
+  transform: scale(0.98);
+}
+
+@media (max-width: 480px) {
+  .cadastro-card {
+    padding: 24px 20px;
+    border-radius: 12px;
+  }
+
+  .cadastro-logo h1 {
+    font-size: 26px;
+  }
+
+  .cadastro-logo span {
+    font-size: 16px;
+  }
+}
