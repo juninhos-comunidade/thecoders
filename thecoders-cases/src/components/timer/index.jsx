@@ -6,7 +6,7 @@ export default function Timer({
   startSignal = false,
   autoStart = false,
   onComplete,
-  size = 220,
+  size = 100,
   strokeWidth = 10,
   color = "#4A8AF7",
   trackColor = "#E9EEF8",
@@ -14,6 +14,8 @@ export default function Timer({
   label = "Tempo",
 }) {
   const [remaining, setRemaining] = useState(Math.max(0, Number(value) || 0));
+  const maxSize = 100;
+  const safeSize = Math.min(Math.max(Number(size) || maxSize, 0), maxSize);
 
   const shouldRun = Boolean(startSignal || autoStart);
 
@@ -43,7 +45,7 @@ export default function Timer({
   const totalSeconds = Math.max(1, Number(value) || 1);
   const progress = Math.min(Math.max(remaining / totalSeconds, 0), 1);
 
-  const radius = (size - strokeWidth) / 2;
+  const radius = (safeSize - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference * (1 - progress);
 
@@ -56,32 +58,32 @@ export default function Timer({
       "--timer-color": color,
       "--timer-track-color": trackColor,
       "--timer-text-color": textColor,
-      "--timer-size": `${size}px`,
+      "--timer-size": `${safeSize}px`,
     }),
-    [color, trackColor, textColor, size]
+    [color, safeSize, trackColor, textColor]
   );
 
   return (
     <div className="circular-timer" style={timerStyle}>
-      <div className="circular-timer__ring" style={{ width: size, height: size }}>
-        <svg className="circular-timer__svg" viewBox={`0 0 ${size} ${size}`}>
+      <div className="circular-timer__ring" style={{ width: safeSize, height: safeSize }}>
+        <svg className="circular-timer__svg" viewBox={`0 0 ${safeSize} ${safeSize}`}>
           <circle
             className="circular-timer__track"
-            cx={size / 2}
-            cy={size / 2}
+            cx={safeSize / 2}
+            cy={safeSize / 2}
             r={radius}
             strokeWidth={strokeWidth}
           />
 
           <circle
             className="circular-timer__progress"
-            cx={size / 2}
-            cy={size / 2}
+            cx={safeSize / 2}
+            cy={safeSize / 2}
             r={radius}
             strokeWidth={strokeWidth}
             strokeDasharray={circumference}
             strokeDashoffset={offset}
-            transform={`rotate(-90 ${size / 2} ${size / 2})`}
+            transform={`rotate(-90 ${safeSize / 2} ${safeSize / 2})`}
           />
         </svg>
 

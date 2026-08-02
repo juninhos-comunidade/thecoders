@@ -1,280 +1,276 @@
-
-@import url("https://fonts.googleapis.com/css2?family=Michroma&family=Inter:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
 .pagina-login {
   display: flex;
   min-height: 100vh;
-  background: #fff;
+  width: 100%;
+  background: #ffffff;
   font-family: "Inter", sans-serif;
+  align-items: center;
+  justify-content: center;
 }
 
+/* Coluna Esquerda */
 .coluna-apresentacao {
-    flex:1;
-    max-width:600px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 4rem 5vw;
+  flex: 1;
+  max-width: 550px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 3rem 4rem;
 }
 
 .marca {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 3rem;
+  display: flex;
+  align-items: center;
+  margin-bottom: 2.5rem;
 }
 
-.marca-nome {
-    display: flex;
-    flex-direction: column;
-    line-height: normal;
-    font-family: "Michroma", sans-serif;
-    font-size: 41px;
-    color: #213a57;
-}
-.marca-nome strong {
-    font-family: "Michroma", sans-serif;
-    font-size: 30px;
-    font-weight: 400;
-    color: rgba(30,30,30,0.85);
+.marca-logo {
+  height: 85px; 
+  width: auto;
+  object-fit: contain;
 }
 
-
-.coluna-apresentaçao h1 {
-    max-width: 543px;
-    font-size: 36px;
-    font-weight: 600;
-    line-height: normal;
-    color: #0f3a6e;
-    margin-bottom: 1.25rem;
+.coluna-apresentacao h1 {
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #1e3a8a;
+  margin-bottom: 1rem;
+  max-width: 440px;
 }
 
-
-.coluna-apresentaçao p {
-    max-width: 546px;
-    font-size: 36px;
-    font-weight: 600;
-    line-height: normal;
-    color: #0f3a6e;
-    margin-bottom: 1.25rem;
-
+.coluna-apresentacao p {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #334155;
+  margin-bottom: 2rem;
+  max-width: 440px;
 }
-
 
 .ilustracao {
-    width:381.98px;
-    aspect-ratio: 148 / 105;
-    max-width: 100%;
+  width: 360px;
+  max-width: 100%;
+  height: auto;
+  align-self: center;
+  margin-top: 1.5rem;
 }
 
-
+/* Coluna Direita (Card de Login) */
 .coluna-login {
-    flex:1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #f6f8fc;
-    padding: 2rem;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
 }
 
 .card-login {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 24px;
-    padding: 24px;
-    width: 100%;
-    max-width: 380px;
-    background: rgba(65,168,234,0.16);
-    border-radius: 24px;
-    box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.1);
-    text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 36px 32px;
+  width: 100%;
+  max-width: 380px;
+  background: #e0f2fe;
+  border-radius: 24px;
+  box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.04);
+  text-align: center;
+  box-sizing: border-box;
 }
 
 .card-login h2 {
-    font-size: 24px;
-    font-weight: 500;
-    color: #213a57;
-    line-height: 20px;
-    letter-spacing: 0.1px;
-    margin:0;
+  font-size: 22px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 4px 0;
 }
 
 .card-login .subtitulo {
-    font-size: 16px;
-    font-weight: 500;
-    color: #213a57;
-    line-height: 20px;
-    letter-spacing: 0.1px;
-    margin:0;
+  font-size: 13px;
+  font-weight: 500;
+  color: #1e293b;
+  margin: 0 0 20px 0;
 }
 
-
-.botoes.sociais {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px;
+/* Botões Sociais */
+.botoes-sociais {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  justify-content: center;
 }
 
-.botoes.sociais button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap:8px;
-    height:48px;
-    padding: 10px 16px;
-    border: 1px solid rgba(29, 29, 29, 0.25);
-    border-radius: 8px;
-    background: #fff;
-    font-size: 13px;
-    font-weight: 500;
-    color:#213a57;
-    cursor:pointer;
-    transition:border-color 0.15s, transform 0.15s;
+.botoes-sociais button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 38px;
+  padding: 6px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 20px;
+  background: #ffffff;
+  font-size: 12px;
+  font-weight: 500;
+  color: #1e293b;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
-.botoes.sociais button:hover {
-    border-color: #3b5bdb;
-    transform: translateY(-1px);
+.botoes-sociais button:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
 }
 
 .icone-social {
-    width: 18px;
-    height: 18px;
-    object-fit: contain;
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
 }
 
-
+/* Divisor */
 .divisor {
-    display: flex;
-    align-items: center;
-    color: #9aa5ba;
-    font-size: 13px;
-    width: 100%;
-    padding: 0 24px;
+  display: flex;
+  align-items: center;
+  color: #1e293b;
+  font-size: 12px;
+  width: 100%;
+  margin: 20px 0;
 }
 
 .divisor::before,
 .divisor::after {
-    content: "";
-    flex: 1;
-    height: 1px;
-    background: rgba (29,29,29,0.25);
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #cbd5e1;
 }
 
 .divisor span {
-    padding: 0 0.75rem;
+  padding: 0 12px;
 }
 
-
+/* Formulário e Inputs */
 .card-login form {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    align-self: stretch;
-    gap: 24px;
-    padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 14px;
 }
 
 .card-login input {
-    width:348px;
-    height: 32px;
-    max-width: 100%;
-    padding: 6px 12px;
-    border: 1px solid rgba(29, 29, 29, 0.25);
-    border-radius: 8px;
-    font-family: "Inter", sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    line-height: 20px;
-    letter-spacing: 0.1px;
-    color: rgba(29, 29, 29, 0.6);
-    outline: none;
-    transition: boorder-color 0.15s;
+  width: 100%;
+  height: 40px;
+  padding: 8px 16px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-family: "Inter", sans-serif;
+  font-size: 13px;
+  color: #1e293b;
+  background: rgba(255, 255, 255, 0.7);
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s, background 0.2s;
 }
 
 .card-login input:focus {
-    border-color: #41a8ea;
+  border-color: #0284c7;
+  background: #ffffff;
 }
 
 .card-login input::placeholder {
-    color: rgba(29, 29, 29, 0.6);
+  color: #64748b;
+}
+
+.campo-senha {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.campo-senha input {
+  padding-right: 42px;
+}
+
+.botao-olho {
+  position: absolute;
+  right: 12px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+}
+
+.botao-olho:hover {
+  color: #1e293b;
 }
 
 .btn-entrar {
-    display:flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    height: 48px;
-    align-self: stretch;
-    padding: 10px 16px;
-    border:none;
-    border-radius: 100px;
-    background: #213a57;
-    color: #fff;
-    font-size: 13px;
-    font-weight: 500;
-    line-height: 20px;
-    letter-spacing: 0.1px;
-    cursor:pointer;
-    transition: background 0.15s
+  width: 100%;
+  height: 42px;
+  border: none;
+  border-radius: 20px;
+  background: #1e293b;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 6px;
+  transition: background 0.2s;
 }
 
 .btn-entrar:hover {
-    background: #16223c;
+  background: #0f172a;
 }
 
-
+/* Links do Rodapé */
 .links-auxiliares {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    align-self: stretch;
-    padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  margin-top: 20px;
 }
-    
+
 .links-auxiliares p {
-    width: 100%;
-    font-size: 13px;
-    font-weight: 500;
-    line-height: 20px;
-    letter-spacing: 0.1px;
-    text-align: center;
-    color: rgba (33,58,87,0.5);
-    margin: 0;
+  font-size: 12px;
+  color: #64748b;
+  margin: 0;
 }
 
 .links-auxiliares a {
-    color: rgba(33,58,87,0.5);
-    font-weight: 700;
-    text-decoration: none;
+  color: #1e293b;
+  font-weight: 700;
+  text-decoration: none;
 }
 
 .links-auxiliares a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
-
+/* Responsividade */
 @media (max-width: 900px) {
-    .pagina-login {
-        flex-direction: column;
-    }
+  .pagina-login {
+    flex-direction: column;
+  }
 
-    .coluna-apresentacao {
-        max-width: 100%;
-        text-align: center;
-        align-items: center;
-        padding: 2.5rem 1.5rem 1.5rem;
-    }
+  .coluna-apresentacao {
+    max-width: 100%;
+    align-items: center;
+    text-align: center;
+    padding: 2rem 1.5rem;
+  }
 
-    .marca {
-        justify-content: center;
-	}
-	.coluna-login {
-		padding: 1.5rem;
-	}
+  .coluna-login {
+    padding: 1.5rem;
+  }
 }
-   

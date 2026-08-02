@@ -9,8 +9,10 @@
   position: relative;
   display: grid;
   place-items: center;
-  width: var(--timer-size, 220px);
-  height: var(--timer-size, 220px);
+  width: min(var(--timer-size, 6.25rem), 6.25rem);
+  height: min(var(--timer-size, 6.25rem), 6.25rem);
+  max-width: 6.25rem;
+  max-height: 6.25rem;
 }
 
 .circular-timer__svg {
@@ -45,7 +47,7 @@
 }
 
 .circular-timer__time {
-  font-size: clamp(1.55rem, 2vw, 2.1rem);
+  font-size: clamp(1rem, 2vw, 2.1rem);
   font-weight: 700;
   line-height: 1;
   letter-spacing: 0.04em;

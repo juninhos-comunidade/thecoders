@@ -1,86 +1,121 @@
 import { useState } from "react";
-import btnApple from "../../assets/btnApple.svg";
-import btnGoogle from "../../assets/btnGoogle.svg";
-import btnLinkedIn from "../../assets/btnLinkedIn.svg";
+import { Eye, EyeOff } from "lucide-react";
+import btnApple from "../../assets/apple.png";
+import btnGoogle from "../../assets/google.png.png";    
+import btnLinkedIn from "../../assets/linkedin.png";
+import ilustracao from "../../assets/image.png";
 import logo from "../../assets/logo.svg";
 import "./index.css";
 
 const REDES = [
-	{nome: "Google", icone: <img src={btnGoogle} alt="Google" /> },
-	{nome: "Apple", icone: <img src={btnApple} alt="Apple" /> },
-	{nome: "LinkedIn", icone: <img src={btnLinkedIn} alt="LinkedIn" /> },
+    {
+        nome: "Google",
+        icone: <img src={btnGoogle} alt="Google" className="icone-social" />,
+    },
+    {
+        nome: "Apple",
+        icone: <img src={btnApple} alt="Apple" className="icone-social" />,
+    },
+    {
+        nome: "LinkedIn",
+        icone: <img src={btnLinkedIn} alt="LinkedIn" className="icone-social" />,
+    },
 ];
 
 export default function Login() {
-	const [email, setEmail] = useState("");
-	const [senha, setSenha] = useState("");
+    const [email, setEmail] = useState("");
+    const [senha, setSenha] = useState("");
+    const [visivel, setVisivel] = useState(false);
 
-	const autenticar = (e) => {
-		e.preventDefault();
-		console.log({ email, senha });
-	};
+    const autenticar = (e) => {
+        e.preventDefault();
+        console.log({ email, senha });
+    };
 
-	return (
-		<div className="pagina-login">
-			<section className="coluna-apresentacao">
-				<div className="marca">
-					<img src={logo} alt="theCoders" className="marca-logo" />
-					<span className="marca-nome">
-						
-					</span>
-				</div>
+    return (
+        <div className="pagina-login">
+            <section className="coluna-apresentacao">
+                <div className="marca">
+                    <img src={logo} alt="theCoders CASES" className="marca-logo" />
+                </div>
 
-				<h1>
-					Resolva desafios
-					<br />
-					Evolua como desenvolvedor
-				</h1>
-				<p>Resolva cases reais de tecnologia, receba avaliações e se desenvolva para o mercado.</p>
-				
-			</section>
+                <h1>
+                    Resolva desafios
+                    <br />
+                    Evolua como desenvolvedor
+                </h1>
+                <p>
+                    Resolva cases reais de tecnologia, receba avaliações e se desenvolva
+                    para o mercado.
+                </p>
 
-			<section className="coluna-login">
-				<div className="card-login">
-					<h2>Login</h2>
-					<p className="subtitulo">se conecte com</p>
+                <img src={ilustracao} alt="Ilustração Dev" className="ilustracao" />
+            </section>
 
-					<div className="botoes-sociais">
-						{REDES.map(({ nome, icone }) => (
-							<button key={nome} type="button" onClick={() => console.log(`Login com ${nome}`)}>
-								{icone}
-								{nome}
-							</button>
-						))}
-					</div>
+            <section className="coluna-login">
+                <div className="card-login">
+                    <h2>Login</h2>
+                    <p className="subtitulo">se conecte com</p>
 
-					<div className="divisor">
-						<span>ou</span>
-					</div>
+                    <div className="botoes-sociais">
+                        {REDES.map(({ nome, icone }) => (
+                            <button
+                                key={nome}
+                                type="button"
+                                onClick={() => console.log(`Login com ${nome}`)}
+                            >
+                                {icone}
+                                {nome}
+                            </button>
+                        ))}
+                    </div>
 
-					<form onSubmit={autenticar}>
-						<input
-							type="email"
-							placeholder="E-mail"
-							value={email}
-							onChange={(e) => setEmail(e.target.value)}
-							autoComplete="username"
-						/>
-						<input
-							type="password"
-							placeholder="Senha"
-							value={senha}
-							onChange={(e) => setSenha(e.target.value)}
-							autoComplete="current-password"
-						/>
-						<button type="submit" className="btn-entrar">Entrar</button>
-					</form>
+                    <div className="divisor">
+                        <span>ou</span>
+                    </div>
 
-					<div className="links-auxiliares">
-						<p>Esqueceu sua senha? <a href="/recuperar">Recupere</a></p>
-						<p>Não tem uma conta? <a href="/cadastro">Cadastre-se</a></p>
-					</div>
-				</div>
-			</section>
-		</div>
-	);
+                    <form onSubmit={autenticar}>
+                        <input
+                            type="email"
+                            placeholder="E-mail"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            autoComplete="username"
+                        />
+                        
+                        <div className="campo-senha">
+                            <input
+                                type={visivel ? "text" : "password"}
+                                placeholder="Senha"
+                                value={senha}
+                                onChange={(e) => setSenha(e.target.value)}
+                                autoComplete="current-password"
+                            />
+                            <button
+                                type="button"
+                                className="botao-olho"
+                                onClick={() => setVisivel((v) => !v)}
+                                aria-label={visivel ? "Ocultar senha" : "Mostrar senha"}
+                            >
+                                {visivel ? <EyeOff size={18} /> : <Eye size={18} />}
+                            </button>
+                        </div>
+
+                        <button type="submit" className="btn-entrar">
+                            Entrar
+                        </button>
+                    </form>
+
+                    <div className="links-auxiliares">
+                        <p>
+                            Esqueceu sua senha? <a href="/recuperar">Recupere</a>
+                        </p>
+                        <p>
+                            Não tem uma conta? <a href="/cadastro">Cadastre-se</a>
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    );
 }
