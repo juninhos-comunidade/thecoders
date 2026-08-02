@@ -1,3 +1,11 @@
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+}
+
 .tutorial-container {
   display: flex;
   flex-direction: column;
@@ -9,6 +17,9 @@
 }
 
 .card-tutorial {
+  font-family: var(--font-primary);
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-text);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -23,9 +34,31 @@
 
 .card-tutorial-header {
   display: flex;
+  align-items: center;
   gap: 0.5rem;
-  width: 100%;
-  margin-bottom: 1rem;
+  background-color: #91aed1;
+  padding: 0.75rem 1rem;
+  border-radius: 1rem 1rem 0 0;
+  margin: -2rem -2rem 1rem -2rem;
+  width: calc(100% + 4rem);
+}
+
+.card-tutorial-header h2 {
+  font-family: var(--font-logo);
+  font-size: var(--fs-title);
+  font-family: "Michroma", sans-serif;
+  flex-grow: 1;
+  margin: 0;
+  color: #192d43;
+  font-size: 1.1rem;
+}
+
+.card-tutorial p {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
 }
 
 .dot {
@@ -74,4 +107,32 @@
 .nav-button-disabled {
   opacity: 0.3;
   cursor: default;
+}
+
+.progress-bar-tutorial {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.progress-dot {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background-color: #d9d9d9;
+  transition:
+    width 0.3s ease,
+    background-color 0.3s ease;
+}
+
+.progress-dot-active {
+  background-color: #1e3a5f;
+  width: 1.5rem;
+  height: 0.5rem;
+}
+
+.tutorial-logo {
+  width: 8rem;
+  margin-top: 2rem;
 }
