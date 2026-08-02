@@ -29,6 +29,16 @@ function Tutorial () { const [slideIndex, setSlideIndex] = useState(0);
     nextButtonClass = "nav-button nav-button-disabled";
   }
 
+  function getDotClass(i) {
+  let dotClass = "progress-dot";
+
+  if (i === slideIndex) {
+    dotClass = "progress-dot progress-dot-active";
+  }
+
+  return dotClass;
+}
+
 
     return (
 
@@ -51,9 +61,10 @@ function Tutorial () { const [slideIndex, setSlideIndex] = useState(0);
                     <span className="dot dot-red"></span> {/*bolinhas coloridas da parte superior do card*/}
                     <span className="dot dot-yellow"></span>
                     <span className="dot dot-green"></span>
+                    <h2>{currentSlide.title}</h2>
                 </div> 
             
-            <h2>{currentSlide.title}</h2>
+            
             <p>{currentSlide.text}</p>  
             
             </div>
@@ -71,10 +82,10 @@ function Tutorial () { const [slideIndex, setSlideIndex] = useState(0);
 
              <div className="progress-bar-tutorial">
 
-                {slides.map ((slide, i) => <span className="progress-dot" key={i}></span> ) }
+                {slides.map ((slide, i) => <span className={getDotClass(i)} key={i}></span> ) }
              </div>
 
-            <img src={logo} alt="theCoders Cases"/>
+            <img src={logo} alt="theCoders Cases" className="tutorial-logo"/>
         
         </div>
 
