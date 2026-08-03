@@ -1,7 +1,12 @@
 import Login from "./pages/login";
 import EsqueciSenha from "./pages/esqueci-senha";
-import CadastroPage from "./pages/cadastro"; // ajuste o caminho conforme onde você salvou o arquivo
-import Tutorial from "./pages/tutorial";
+import CadastroPage from "./pages/cadastro";
+import Lobby from "./pages/lobby";
+import OnCase from "./pages/oncase";
+import LastResult from "./pages/last-result";
+import ProcessingSolution from "./pages/processing-solution";
+
+
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
@@ -12,8 +17,10 @@ export default function Router() {
 				<Route path="/" element={<Login />} />
 				<Route path="/recuperar" element={<EsqueciSenha />} />
 				<Route path="/cadastro" element={<CadastroPage />} />
-				<Route path="/tutorial" element={<Tutorial />} />
-				{/* <Route path="/lobby" element={<Lobby />} /> */}
+				<Route path="/lobby" element={<Lobby />} />
+				<Route path="/on-case" element={<OnCase />} />
+				<Route path="/last-result" element={<LastResult />} />
+				<Route path="/processing-solution" element={<ProcessingSolution />} />
 			</Routes>
 		</BrowserRouter>
 	);
