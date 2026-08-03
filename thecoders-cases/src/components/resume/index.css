@@ -13,16 +13,28 @@
     box-shadow: 4px 4px 4px 0 rgba(0, 0, 0, 0.10);
 }
 
+.resume-title, 
+.resume-text {
+    color: var(--cor-primaria);
+    font-family: var(--font-primary);
+    font-style: normal;
+    letter-spacing: var(--Static-Label-Large-Tracking, 0.00625rem);
+}
+
+.resume-title {
+    margin: 0;
+    font-size: var(--fs-h3);
+    font-weight: var(--fw-semibold);
+    line-height: var(--lh-heading);
+
+}
+
 .resume-text {
     display: flex;
     align-items: center;
     gap: 0.5rem;
     align-self: stretch;
-    color: #213A57;
-    font-family: Inter;
     font-size: 1rem;
-    font-style: normal;
     font-weight: 500;
-    line-height: var(--Static-Label-Large-Line-Height, 1.25rem); /* 125% */
-    letter-spacing: var(--Static-Label-Large-Tracking, 0.00625rem);
+    line-height: var(--Static-Label-Large-Line-Height, 1.25rem); /* 83.333% */
 }
