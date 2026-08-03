@@ -1,0 +1,44 @@
+.container-last-result {
+    display: flex;
+    padding: 5rem 5.125rem 0 5.125rem;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    flex: 1 0 0;
+    align-self: stretch;
+}
+
+.textos {
+    display: flex;
+    padding: 0 1.5rem;
+    align-items: flex-start;
+    gap: 0.5rem;
+    align-self: stretch;
+}
+
+.return {
+    display: flex;
+    width: 8.875rem;
+    height: 3rem;
+    justify-content: center;
+    align-items: center;
+}
+
+h3, .title {
+    align-self: stretch;
+    color: var(--cor-primaria);
+}
+
+h3 {
+    flex: 1 0 0;
+}
+.cards-container {
+    display: inline-grid;
+    padding: 2rem 0;
+    row-gap: 2.5rem;
+    column-gap: 40px;
+    align-self: stretch;
+    grid-template-rows: repeat(1,fit-content(100%));
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    grid-auto-flow: row;
+}
