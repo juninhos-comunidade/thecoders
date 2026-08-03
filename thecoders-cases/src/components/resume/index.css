@@ -1,0 +1,14 @@
+.container-resume {
+    display: flex;
+    padding: 3rem 1.5rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    align-self: stretch;
+    grid-row: span 1;
+    grid-column: span 1;
+    justify-self: stretch;
+    border-radius: 1.5rem;
+    background: var(--cor-secundaria);
+    box-shadow: 4px 4px 4px 0 rgba(0, 0, 0, 0.10);
+}
