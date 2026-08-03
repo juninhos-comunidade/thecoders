@@ -37,7 +37,7 @@ body {
   align-items: center;
   gap: 0.5rem;
   background-color: #91aed1;
-  padding: 0.75rem 1rem;
+  padding: 0.75rem 0.75rem;
   border-radius: 1rem 1rem 0 0;
   margin: -2rem -2rem 1rem -2rem;
   width: calc(100% + 4rem);
@@ -57,13 +57,14 @@ body {
   flex-grow: 1;
   display: flex;
   align-items: center;
+  text-align: left;
   justify-content: center;
   margin: 0;
 }
 
 .dot {
-  width: 0.75rem;
-  height: 0.75rem;
+  width: 0.65rem;
+  height: 0.65rem;
   border-radius: 50%;
 }
 
@@ -100,8 +101,8 @@ body {
 }
 
 .nav-button svg {
-  width: 2rem;
-  height: 2rem;
+  width: 2.5rem;
+  height: 2.5rem;
 }
 
 .nav-button-disabled {
@@ -117,9 +118,9 @@ body {
 }
 
 .progress-dot {
-  width: 0.6rem;
-  height: 0.6rem;
-  border-radius: 50%;
+  width: 1.5rem;
+  height: 0.35rem;
+  border-radius: 0.2rem;
   background-color: #d9d9d9;
   transition:
     width 0.3s ease,
@@ -128,11 +129,29 @@ body {
 
 .progress-dot-active {
   background-color: #1e3a5f;
-  width: 1.5rem;
-  height: 0.5rem;
 }
 
 .tutorial-logo {
   width: 8rem;
   margin-top: 2rem;
+}
+
+.finish-button-wrapper {
+  min-height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.finish-button {
+  background-color: transparent;
+  color: #1e3a5f;
+  border: 1px solid #1e3a5f;
+  padding: 0.4rem 0.9rem;
+  border-radius: 0.5rem;
+  font-family: var(--font-primary);
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-button);
+  cursor: pointer;
 }
