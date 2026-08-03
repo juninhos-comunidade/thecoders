@@ -2,7 +2,7 @@ import Login from "./pages/login";
 import EsqueciSenha from "./pages/esqueci-senha";
 import CadastroPage from "./pages/cadastro";
 import Lobby from "./pages/lobby";
-import OnCase from "./pages/oncase";
+import OnCase from "./pages/on-case";
 import LastResult from "./pages/last-result";
 import ProcessingSolution from "./pages/processing-solution";
 
