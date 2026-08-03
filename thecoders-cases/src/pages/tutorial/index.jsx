@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.svg";
 import { useState } from "react";
 import "./index.css"
@@ -37,6 +38,15 @@ function Tutorial () { const [slideIndex, setSlideIndex] = useState(0);
   }
 
   return dotClass;
+}
+
+let finishButton = null;
+if (slideIndex === 4) {
+  finishButton = (
+    <button className="finish-button" onClick={() => navigate("/lobby")}>
+      Finalizar Tutorial
+    </button>
+  );
 }
 
 
@@ -84,6 +94,10 @@ function Tutorial () { const [slideIndex, setSlideIndex] = useState(0);
 
                 {slides.map ((slide, i) => <span className={getDotClass(i)} key={i}></span> ) }
              </div>
+
+            <div className="finish-button-wrapper">
+                {finishButton}
+            </div>
 
             <img src={logo} alt="theCoders Cases" className="tutorial-logo"/>
         
