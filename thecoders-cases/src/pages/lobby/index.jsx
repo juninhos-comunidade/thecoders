@@ -4,10 +4,7 @@ import Navbar from "../../components/navbar";
 import CardProfile from "../../components/card-profile";
 import CardCases from "../../components/card-cases";
 
-// import { useNavigate } from "react-router-dom";
-
 export default function Lobby() {
-    // const navigate = useNavigate();
 
     return (
         <>
