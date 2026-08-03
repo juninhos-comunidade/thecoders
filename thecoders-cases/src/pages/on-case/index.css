@@ -1,0 +1,6 @@
+.container-oncase {
+    display: flex;
+    width: 100%;
+    min-height: 52rem;
+    align-items: flex-start;
+}
