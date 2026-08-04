@@ -1,4 +1,5 @@
 import Login from "./pages/login";
+import Tutorial from "./pages/tutorial";
 import EsqueciSenha from "./pages/esqueci-senha";
 import CadastroPage from "./pages/cadastro";
 import Lobby from "./pages/lobby";
@@ -15,6 +16,7 @@ export default function Router() {
 		<BrowserRouter>
 			<Routes>
 				<Route path="/" element={<Login />} />
+				<Route path="/tutorial" element={<Tutorial />} />
 				<Route path="/recuperar" element={<EsqueciSenha />} />
 				<Route path="/cadastro" element={<CadastroPage />} />
 				<Route path="/lobby" element={<Lobby />} />
