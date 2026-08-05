@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./index.css";
 import SendMsgBar from "../send-msg-bar";
 
-export default function ChatBox({ initialMessages = [] }) {
+export default function ChatBox({ initialMessages = [], user }) {
     const [messages, setMessages] = useState(initialMessages);
 
     const handleSendMessage = (text) => {
@@ -27,6 +27,13 @@ export default function ChatBox({ initialMessages = [] }) {
 
             <div className="content-chat">
                 <div className="building-blocks">
+                    <p className="users-in-the-room">
+                        Elena entrou na sala <br/>
+                        Eduardo entrou na sala <br/>
+                        Bernardo entrou na sala <br/>
+                        Valentina entrou na sala <br/>
+                        {user} entrou na sala <br/>
+                    </p>
                     {messages.map((msg, index) => (
                         <div id="msg-text"
                             key={index} 

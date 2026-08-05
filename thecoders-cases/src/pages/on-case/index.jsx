@@ -69,7 +69,7 @@ export default function OnCase() {
                     timeLimit={18} // 18 minutes
                 />
                 
-                <ChatBox messages={[]} />
+                <ChatBox messages={[]} user="Gabriela" />
             </div>
         </>
     );
