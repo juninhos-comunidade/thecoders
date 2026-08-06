@@ -10,7 +10,7 @@
   justify-content: center;
 }
 
-/* Coluna Esquerda */
+
 .coluna-apresentacao {
   flex: 1;
   max-width: 550px;
@@ -58,7 +58,7 @@
   margin-top: 1.5rem;
 }
 
-/* Coluna Direita (Card de Login) */
+
 .coluna-login {
   flex: 1;
   display: flex;
@@ -132,7 +132,6 @@
   object-fit: contain;
 }
 
-/* Divisor */
 .divisor {
   display: flex;
   align-items: center;
@@ -154,7 +153,7 @@
   padding: 0 12px;
 }
 
-/* Formulário e Inputs */
+
 .card-login form {
   display: flex;
   flex-direction: column;
@@ -232,7 +231,7 @@
   background: #0f172a;
 }
 
-/* Links do Rodapé */
+
 .links-auxiliares {
   display: flex;
   flex-direction: column;
@@ -273,4 +272,9 @@
   .coluna-login {
     padding: 1.5rem;
   }
+}
+.mensagem-erro {
+    color: #d92d20;
+    font-size: 0.85rem;
+    margin: -6px 0 12px;
 }

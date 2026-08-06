@@ -1,31 +1,68 @@
+* {
+    box-sizing: border-box;
+}
+
+
+.header-azul {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem clamp(1rem, 5vw, 5rem);
+    background-color: #e3f2fd;
+}
+
+
 .container-lobby {
     display: flex;
-    padding: 5rem 5.125rem 0 5.125rem;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     gap: 2rem;
-    flex: 1 0 0;
-    align-self: stretch;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+   
+    padding: 8.5rem clamp(1rem, 5vw, 5.125rem) 3rem; 
 }
+
 
 .textos {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
     gap: 0.5rem;
-    align-self: stretch;
+    width: 100%;
 }
 
 h3, .title {
-    align-self: stretch;
     color: var(--cor-primaria);
+    font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+    margin: 0;
 }
+
 
 .cards {
     display: flex;
-    padding: 2rem 0;
     justify-content: center;
-    align-items: center;
     gap: 2.5rem;
-    align-self: stretch;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.cards > * {
+    flex: 1 1 280px;
+}
+
+@media (max-width: 768px) {
+    .container-lobby {
+        gap: 1.5rem;
+        padding-top: 7rem; 
+
+    .cards {
+        gap: 1.5rem;
+    }
 }
