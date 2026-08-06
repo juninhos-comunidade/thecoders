@@ -1,7 +1,12 @@
 from fastapi import FastAPI
+
 from database.supabase_client import supabase
+from routers import solucao
 
 app = FastAPI()
+
+app.include_router(solucao.router)
+
 
 @app.get("/health")
 def health_check():
