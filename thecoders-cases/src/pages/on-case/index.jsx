@@ -1,46 +1,77 @@
 import "./index.css";
 import ChatBox from "../../components/chat-box";
 import CaseDescription from "../../components/case-description";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { io } from "socket.io-client";
+
+const socket = io("http://localhost:3000", {
+    autoConnect: true,
+});
 
 export default function OnCase() {
+    const navigate = useNavigate();
+
+ 
+    const isNavigatingAway = useRef(false);
+
+ 
+    const [currentCase, setCurrentCase] = useState({
+        id: 18,
+        title: "Case #18 - API de Agendamento",
+        dificulty: "🟢 Fácil",
+        description:
+            "Descrição do case - Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+        timeLimit: 18,
+    });
+
+    
+    const emitirInfracaoSair = useCallback(() => {
+        if (isNavigatingAway.current) return;
+        isNavigatingAway.current = true;
+
+        
+        socket.emit("case:infracao_detectada", {
+            motivo: "Um dos participantes saiu da tela cheia ou trocou de aba.",
+        });
+    }, []);
+
     const enterFullscreen = useCallback(() => {
         const el = document.documentElement;
-
-        if (document.fullscreenElement) return; // já está em tela cheia
+        if (document.fullscreenElement) return;
 
         const request =
             el.requestFullscreen ||
-            el.webkitRequestFullscreen || // Safari
-            el.msRequestFullscreen;       // versões antigas do Edge/IE
+            el.webkitRequestFullscreen ||
+            el.msRequestFullscreen;
 
         if (request) {
             request.call(el).catch((err) => {
-                console.warn("Não foi possível entrar em tela cheia automaticamente:", err);
+                console.warn("Não foi possível entrar em tela cheia:", err);
             });
         }
     }, []);
 
     const exitFullscreen = useCallback(() => {
-        if (!document.fullscreenElement) return; // já não está em tela cheia
+        if (!document.fullscreenElement) return;
 
         const exit =
             document.exitFullscreen ||
-            document.webkitExitFullscreen || // Safari
-            document.msExitFullscreen;       // versões antigas do Edge/IE
+            document.webkitExitFullscreen ||
+            document.msExitFullscreen;
 
         if (exit) {
             exit.call(document).catch((err) => {
-                console.warn("Não foi possível sair da tela cheia automaticamente:", err);
+                console.warn("Não foi possível sair da tela cheia:", err);
             });
         }
     }, []);
 
     useEffect(() => {
-        // Tenta automaticamente ao carregar
+       
         enterFullscreen();
 
-        // Fallback: se o navegador bloquear, ativa no primeiro clique/tecla
+    
         const handleFirstInteraction = () => {
             enterFullscreen();
             window.removeEventListener("click", handleFirstInteraction);
@@ -50,27 +81,85 @@ export default function OnCase() {
         window.addEventListener("click", handleFirstInteraction);
         window.addEventListener("keydown", handleFirstInteraction);
 
+       
+        const handleFullscreenChange = () => {
+            const aindaEmFullscreen = !!(
+                document.fullscreenElement ||
+                document.webkitFullscreenElement ||
+                document.msFullscreenElement
+            );
+
+            if (!aindaEmFullscreen) {
+                emitirInfracaoSair();
+            }
+        };
+
+        
+        const handleVisibilityChange = () => {
+            if (document.hidden) {
+                emitirInfracaoSair();
+            }
+        };
+
+        
+        const handleBlur = () => {
+            emitirInfracaoSair();
+        };
+
+        document.addEventListener("fullscreenchange", handleFullscreenChange);
+        document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
+        document.addEventListener("msfullscreenchange", handleFullscreenChange);
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+        window.addEventListener("blur", handleBlur);
+
+        
+        socket.on("case:redirecionar_lobby", (data) => {
+            isNavigatingAway.current = true;
+            exitFullscreen();
+            navigate("/lobby", {
+                state: {
+                    aviso:
+                        data?.mensagem ||
+                        "Um participante saiu da tela de resolução. Todos foram redirecionados.",
+                },
+            });
+        });
+
+    
+        socket.on("case:nova_case", (novaCase) => {
+            setCurrentCase(novaCase);
+            isNavigatingAway.current = false;
+            enterFullscreen();
+        });
+
         return () => {
             window.removeEventListener("click", handleFirstInteraction);
             window.removeEventListener("keydown", handleFirstInteraction);
+            document.removeEventListener("fullscreenchange", handleFullscreenChange);
+            document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
+            document.removeEventListener("msfullscreenchange", handleFullscreenChange);
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
+            window.removeEventListener("blur", handleBlur);
 
-            // Sai da tela cheia ao desmontar (sair da página)
+            
+            socket.off("case:redirecionar_lobby");
+            socket.off("case:nova_case");
+
+            isNavigatingAway.current = true;
             exitFullscreen();
         };
-    }, [enterFullscreen, exitFullscreen]);
-    
+    }, [enterFullscreen, exitFullscreen, emitirInfracaoSair, navigate]);
+
     return (
-        <>
-            <div className="container-oncase">
-                <CaseDescription 
-                    title="Case #18 - API de Agendamento"
-                    dificulty="🟢 Fácil"
-                    description="Descrição do case - Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim  veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea  commodo consequat. Duis aute irure dolor in reprehenderit in voluptate  velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint  occaecat cupidatat non proident, sunt in culpa qui officia deserunt  mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim  veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea  commodo consequat. Duis aute irure dolor in reprehenderit in voluptate  velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint  occaecat cupidatat non proident, sunt in culpa qui officia deserunt  mollit anim id est laborum."
-                    timeLimit={18} // 18 minutes
-                />
-                
-                <ChatBox messages={[]} user="Gabriela" />
-            </div>
-        </>
+        <div className="container-oncase">
+            <CaseDescription
+                title={currentCase.title}
+                dificulty={currentCase.dificulty}
+                description={currentCase.description}
+                timeLimit={currentCase.timeLimit}
+            />
+
+            <ChatBox messages={[]} user="Gabriela" />
+        </div>
     );
 }

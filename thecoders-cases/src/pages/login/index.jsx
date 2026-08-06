@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import btnApple from "../../assets/apple.png";
 import btnGoogle from "../../assets/google.png.png";    
@@ -22,14 +23,34 @@ const REDES = [
     },
 ];
 
+// Credenciais fixas para validação do login (uso em protótipo/hackathon)
+const CREDENCIAIS_VALIDAS = {
+    email: "admin@thecc.com.br",
+    senha: "thecc2026",
+};
+
 export default function Login() {
+    const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
     const [visivel, setVisivel] = useState(false);
+    const [erro, setErro] = useState("");
 
     const autenticar = (e) => {
         e.preventDefault();
-        console.log({ email, senha });
+
+        // Compara o que foi digitado com as credenciais válidas
+        if (
+            email !== CREDENCIAIS_VALIDAS.email ||
+            senha !== CREDENCIAIS_VALIDAS.senha
+        ) {
+            setErro("E-mail ou senha incorretos");
+            return;
+        }
+
+        // Login deu certo, redireciona pro tutorial
+        setErro("");
+        navigate("/tutorial");
     };
 
     return (
@@ -100,6 +121,8 @@ export default function Login() {
                                 {visivel ? <EyeOff size={18} /> : <Eye size={18} />}
                             </button>
                         </div>
+
+                        {erro && <p className="mensagem-erro">{erro}</p>}
 
                         <button type="submit" className="btn-entrar">
                             Entrar

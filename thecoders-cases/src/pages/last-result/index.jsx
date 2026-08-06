@@ -5,10 +5,12 @@ import Resume from "../../components/resume";
 import Score from "../../components/score";
 
 export default function LastResult() {
-
     return (
         <>
-			<Navbar nivel="E" />
+            {}
+            <header className="header-azul">
+                <Navbar nivel="E" />
+            </header>
 
             <div className="container-last-result">
                 <div className="textos">
@@ -19,22 +21,20 @@ export default function LastResult() {
                 </div>
 
                 <div className="cards-container">
-                    <Score notas={{
-                        raciocinioLogico: "9,0",
-                        qualidadeTecnica: "8,5",
-                        resolucaoProblemas: "9,5",
-                        comunicacao: "7,0",
-                        priorizacao: "8,9",
-                        colaboracao: "9,0"
-                    }} />
+                    <Score
+                        notas={{
+                            raciocinioLogico: "9,0",
+                            qualidadeTecnica: "8,5",
+                            resolucaoProblemas: "9,5",
+                            comunicacao: "7,0",
+                            priorizacao: "8,9",
+                            colaboracao: "9,0",
+                        }}
+                    />
 
-                    <Resume texto="Você apresentou uma solução consistente,
-                            bem estruturada e funcional.
-
-                            <br/><br/>Sua principal força foi a organização da arquitetura.
-
-                            <br/><br/>A maior oportunidade de melhoria está na
-                            documentação e na justificativa das decisões." />
+                    <Resume
+                        texto="Você apresentou uma solução consistente, bem estruturada e funcional.<br/><br/>Sua principal força foi a organização da arquitetura.<br/><br/>A maior oportunidade de melhoria está na documentação e na justificativa das decisões."
+                    />
                 </div>
             </div>
         </>

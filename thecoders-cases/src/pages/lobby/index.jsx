@@ -5,12 +5,14 @@ import CardProfile from "../../components/card-profile";
 import CardCases from "../../components/card-cases";
 
 export default function Lobby() {
-
     const user = "Lorena";
 
     return (
         <>
-			<Navbar nivel="E" />
+            {}
+            <header className="header-azul">
+                <Navbar nivel="E" />
+            </header>
 
             <div className="container-lobby">
                 <div className="textos">

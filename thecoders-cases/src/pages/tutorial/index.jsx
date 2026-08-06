@@ -15,7 +15,9 @@ const slides = [
 
 
 
-function Tutorial () { const [slideIndex, setSlideIndex] = useState(0);
+function Tutorial () {
+    const navigate = useNavigate();
+    const [slideIndex, setSlideIndex] = useState(0);
     const currentSlide = slides[slideIndex];
 
     let backButtonClass = "nav-button";
