@@ -6,13 +6,15 @@ import CardCases from "../../components/card-cases";
 
 export default function Lobby() {
 
+    const user = "Lorena";
+
     return (
         <>
 			<Navbar nivel="E" />
 
             <div className="container-lobby">
                 <div className="textos">
-                    <h3>Bem-vindo de volta!</h3>
+                    <h3>Bem-vindo, {user}!</h3>
                     <div className="title">Continue evoluindo resolvendo desafios reais</div>
                 </div>
 
