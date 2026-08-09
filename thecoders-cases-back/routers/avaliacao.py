@@ -6,7 +6,8 @@ from services.avaliacao_ia import (
     AvaliacaoIAIndisponivel,
     avaliar_solucao_ia,
     montar_feedback_texto,
-    NOTA_MINIMA_APROVACAO,
+    CATEGORIAS_AVALIACAO,
+    MEDIA_MINIMA_APROVACAO,
 )
 
 router = APIRouter(prefix="/avaliacao", tags=["avaliacao"])
@@ -16,6 +17,22 @@ FEEDBACK_IA_INDISPONIVEL = (
     "Não foi possível avaliar sua solução com a IA no momento. "
     "Sua solução foi registrada e será revisada em breve."
 )
+
+# categoria (snake_case, usado no serviço de IA e nas colunas nota_<categoria>)
+# -> chave camelCase esperada pelo componente Score do frontend
+CATEGORIA_PARA_CAMEL_CASE = {
+    "raciocinio_logico": "raciocinioLogico",
+    "qualidade_tecnica": "qualidadeTecnica",
+    "resolucao_problemas": "resolucaoProblemas",
+    "comunicacao": "comunicacao",
+    "priorizacao": "priorizacao",
+    "colaboracao": "colaboracao",
+}
+
+
+def _formatar_nota_categoria(valor: float) -> str:
+    """Formata 9.0 como '9,0', no padrão esperado pelo componente Score (decimal com vírgula)."""
+    return f"{valor:.1f}".replace(".", ",")
 
 
 @router.post("")
@@ -59,16 +76,18 @@ async def avaliar_solucao(payload: AvaliacaoPayload):
             nivel_expertise=usuario["nivel_expertise"],
             solucao_texto=payload.solucao_enviada,
         )
-        nota = avaliacao["nota"]
-        aprovado = nota >= NOTA_MINIMA_APROVACAO
+        nota_media = avaliacao["nota_media"]
+        aprovado = nota_media > MEDIA_MINIMA_APROVACAO
         feedback_texto = montar_feedback_texto(avaliacao)
+        notas_categorias = avaliacao["notas_categorias"]
     except AvaliacaoIAIndisponivel:
         # Fallback: não trava o fluxo do participante se a Groq falhar.
         # A solução fica registrada e aprovada por padrão, sinalizando que
         # a avaliação da IA não pôde ser concluída.
-        nota = None
+        nota_media = None
         aprovado = True
         feedback_texto = FEEDBACK_IA_INDISPONIVEL
+        notas_categorias = {categoria: None for categoria in CATEGORIAS_AVALIACAO}
 
     xp_atual = usuario["xp"]
     xp_ganho = XP_POR_CASE_APROVADO if aprovado else 0
@@ -80,9 +99,10 @@ async def avaliar_solucao(payload: AvaliacaoPayload):
             "case_id": str(payload.case_id),
             "sala_id": str(payload.sala_id),
             "solucao_enviada": payload.solucao_enviada,
-            "nivel_alcancado": nota,
+            "nivel_alcancado": nota_media,
             "aprovado": aprovado,
             "feedback_simulado": feedback_texto,
+            **{f"nota_{categoria}": notas_categorias[categoria] for categoria in CATEGORIAS_AVALIACAO},
         }).execute()
     except Exception as erro:
         raise HTTPException(
@@ -101,8 +121,14 @@ async def avaliar_solucao(payload: AvaliacaoPayload):
     return {
         "status": "avaliado",
         "aprovado": aprovado,
-        "nota": nota,
+        "nota_media": nota_media,
         "feedback": feedback_texto,
+        "notas_categorias": {
+            CATEGORIA_PARA_CAMEL_CASE[categoria]: (
+                _formatar_nota_categoria(valor) if valor is not None else None
+            )
+            for categoria, valor in notas_categorias.items()
+        },
         "xp_ganho": xp_ganho,
         "xp_total": novo_xp,
     }
