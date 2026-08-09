@@ -2,6 +2,7 @@ import "./index.css";
 import ProfileIcon from "../profile-icon";
 import Nivel from "../niveis";
 import logo from "../../assets/logo.svg";
+import Buttons from "../buttons";
 
 export default function Navbar({ nivel }) {
 	return (
@@ -13,6 +14,7 @@ export default function Navbar({ nivel }) {
 			</div>
 
 			<div className="right">
+				<Buttons label="Tutorial" page="/tutorial" />
 				<Nivel level={nivel} /> 
 				<ProfileIcon />
 			</div>
