@@ -43,7 +43,16 @@ Após rodar o último comando, o projeto estará disponível em `http://localhos
 
 ## 🤖 Inteligências Artificiais Utilizadas
 
-- **[Nome da IA]** — utilizada para [finalidade, ex: geração/estruturação dos cases, avaliação de desempenho do candidato ao final da simulação]
+- **ChatGPT - GPT-5.6 Luna:**
+  - Geração dos READMEs;
+  - Geração da documentação do projeto;
+- **Claude - Sonnet 5:**
+  - Auxílio em alguns componentes do front-end;
+  - Auxílio na implementação de algumas funcionalidades do back-end;
+- **Groq - llama-3.3-70b-versatile:**
+  - Análise de desempenho dos usuários com base nas respostas enviadas
+
+
 
 ## 👥 Equipe e Responsabilidades
 
