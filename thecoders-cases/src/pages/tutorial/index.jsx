@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import logo from "../../assets/logo.svg";
 import { useState } from "react";
 import "./index.css"
@@ -12,13 +12,27 @@ const slides = [
     {title: "Como funciona a evolução de nível", text: "Você começa como Estagiário, com acesso liberado aos cases fáceis e médios. Conforme você vai completando cases, vai ganhando XP e, ao acumular XP suficiente, sobe automaticamente para o nível Junior. Ao virar Junior, você desbloqueia os cases difíceis e pode seguir treinando entre médios e difíceis, no seu ritmo."}
 ]
 
-
-
-
 function Tutorial () {
     const navigate = useNavigate();
     const [slideIndex, setSlideIndex] = useState(0);
+    const location = useLocation();
+    const usuarioId = location.state?.usuarioId;
     const currentSlide = slides[slideIndex];
+
+    const finalizarTutorial = async () => {
+    try {
+        if (usuarioId) {
+            await fetch(
+                `http://127.0.0.1:8000/usuarios/${usuarioId}/tutorial-visto`,
+                { method: "PATCH" }
+            );
+        }
+    } catch (err) {
+        console.log("Não foi possível marcar o tutorial como visto:", err);
+    } finally {
+        navigate("/lobby");
+    }
+};
 
     let backButtonClass = "nav-button";
 
@@ -45,7 +59,7 @@ function Tutorial () {
 let finishButton = null;
 if (slideIndex === 4) {
   finishButton = (
-    <button className="finish-button" onClick={() => navigate("/lobby")}>
+    <button className="finish-button" onClick={finalizarTutorial}>
       Finalizar Tutorial
     </button>
   );
