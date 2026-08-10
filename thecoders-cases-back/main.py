@@ -1,12 +1,23 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from database.supabase_client import supabase
-from routers import solucao, avaliacao
+from routers import solucao, avaliacao, login, usuario
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 app.include_router(solucao.router)
 app.include_router(avaliacao.router)
+app.include_router(login.router)
+app.include_router(usuario.router)
 
 
 @app.get("/health")
