@@ -23,12 +23,6 @@ const REDES = [
     },
 ];
 
-// Credenciais fixas para validação do login (uso em protótipo/hackathon)
-const CREDENCIAIS_VALIDAS = {
-    email: "admin@thecc.com.br",
-    senha: "thecc2026",
-};
-
 export default function Login() {
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
@@ -36,22 +30,33 @@ export default function Login() {
     const [visivel, setVisivel] = useState(false);
     const [erro, setErro] = useState("");
 
-    const autenticar = (e) => {
-        e.preventDefault();
+    const autenticar = async (e) => {
+    e.preventDefault();
+    setErro("");
 
-        // Compara o que foi digitado com as credenciais válidas
-        if (
-            email !== CREDENCIAIS_VALIDAS.email ||
-            senha !== CREDENCIAIS_VALIDAS.senha
-        ) {
-            setErro("E-mail ou senha incorretos");
+    try {
+        const resposta = await fetch("http://127.0.0.1:8000/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, senha }),
+        });
+
+        if (!resposta.ok) {
+            setErro("Email ou senha inválidos");
             return;
         }
 
-        // Login deu certo, redireciona pro tutorial
-        setErro("");
-        navigate("/tutorial");
-    };
+        const usuario = await resposta.json();
+
+        if (usuario.primeiro_login) {
+            navigate("/tutorial", { state: { usuarioId: usuario.id } });
+        } else {
+            navigate("/lobby", { state: { usuarioId: usuario.id } });
+        }
+    } catch (err) {
+        setErro("Não foi possível conectar ao servidor");
+    }
+};
 
     return (
         <div className="pagina-login">
