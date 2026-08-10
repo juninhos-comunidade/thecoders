@@ -23,6 +23,7 @@ const REDES = [
     },
 ];
 
+
 export default function Login() {
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
