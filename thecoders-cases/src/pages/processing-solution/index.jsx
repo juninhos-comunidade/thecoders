@@ -1,11 +1,23 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./index.css";
 import ampulheta from "../../assets/ampulheta.svg";
+import { API_BASE_URL } from "../../config/api";
+
+const TEMPO_MINIMO_ANIMACAO_SEGUNDOS = 5;
 
 export default function ProcessingSolution() {
   const navigate = useNavigate();
-  const [secondsLeft, setSecondsLeft] = useState(5);
+  const location = useLocation();
+  const { usuarioId, caseId, salaId, solucaoEnviada } = location.state || {};
+
+  const [secondsLeft, setSecondsLeft] = useState(TEMPO_MINIMO_ANIMACAO_SEGUNDOS);
+
+  // Controla a corrida entre a animação (mínimo de 5s, por UX) e a resposta real
+  // da API: só navegamos para /last-result quando as duas tiverem terminado.
+  const animacaoConcluidaRef = useRef(false);
+  const avaliacaoRef = useRef({ concluida: false, resultado: null, erro: null });
+  const jaNavegouRef = useRef(false);
 
   const statusIcons = {
     done: "✓",
@@ -13,23 +25,93 @@ export default function ProcessingSolution() {
     final: "🎉",
   };
 
+  const tentarNavegar = () => {
+    if (jaNavegouRef.current) return;
+    if (!animacaoConcluidaRef.current || !avaliacaoRef.current.concluida) return;
+
+    jaNavegouRef.current = true;
+
+    if (avaliacaoRef.current.erro) {
+      navigate("/lobby", {
+        state: {
+          aviso:
+            "Não foi possível avaliar sua solução agora. Tente novamente em instantes.",
+        },
+      });
+      return;
+    }
+
+    navigate("/last-result", { state: { resultado: avaliacaoRef.current.resultado } });
+  };
+
+  // Contagem regressiva visual (não passa de 1s caso a avaliação ainda não tenha voltado).
   useEffect(() => {
     const timer = setInterval(() => {
       setSecondsLeft((current) => {
         if (current <= 1) {
-          clearInterval(timer);
-          navigate("/lobby", {
-            state: { aviso: "Sua solução foi processada e avaliada!" },
-          });
-          return 0;
+          animacaoConcluidaRef.current = true;
+          tentarNavegar();
+          return avaliacaoRef.current.concluida ? 0 : 1;
         }
-
         return current - 1;
       });
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [navigate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Chamada real ao endpoint de avaliação por IA (B09).
+  useEffect(() => {
+    if (!usuarioId || !caseId || !salaId || !solucaoEnviada) {
+      avaliacaoRef.current = {
+        concluida: true,
+        resultado: null,
+        erro: "dados_ausentes",
+      };
+      animacaoConcluidaRef.current = true;
+      tentarNavegar();
+      return;
+    }
+
+    let cancelado = false;
+
+    (async () => {
+      try {
+        const resposta = await fetch(`${API_BASE_URL}/avaliacao`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            usuario_id: usuarioId,
+            case_id: caseId,
+            sala_id: salaId,
+            solucao_enviada: solucaoEnviada,
+          }),
+        });
+
+        if (cancelado) return;
+
+        if (!resposta.ok) {
+          avaliacaoRef.current = { concluida: true, resultado: null, erro: "http" };
+          tentarNavegar();
+          return;
+        }
+
+        const resultado = await resposta.json();
+        avaliacaoRef.current = { concluida: true, resultado, erro: null };
+        tentarNavegar();
+      } catch {
+        if (cancelado) return;
+        avaliacaoRef.current = { concluida: true, resultado: null, erro: "rede" };
+        tentarNavegar();
+      }
+    })();
+
+    return () => {
+      cancelado = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [usuarioId, caseId, salaId, solucaoEnviada]);
 
   return (
     <div className="processing-page">
