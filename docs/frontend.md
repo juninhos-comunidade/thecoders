@@ -64,9 +64,19 @@ Isso reflete diretamente o fluxo descrito em `arquitetura.md`:
 ## 5. Páginas
 
 ### `Login` (`/`)
-Formulário de e-mail/senha com toggle de visibilidade da senha, mais três
+Formulário de e-mail/senha, com toggle de visibilidade da senha, mais três
 botões de login social (Google, Apple, LinkedIn — atualmente só logam no
 console). Links para `/recuperar` e `/cadastro`.
+
+Já integrado com o back-end: no submit, chama `POST http://127.0.0.1:8000/login`.
+Se `primeiro_login` vier `true` na resposta, navega para `/tutorial`; senão,
+para `/lobby` — em ambos os casos passando `usuarioId` via `state` de
+navegação do React Router. Erro de autenticação (401) exibe mensagem inline;
+falha de conexão com o servidor também é tratada com mensagem própria.
+
+> ⚠️ A URL da API está hardcoded (`http://127.0.0.1:8000`) — vai quebrar em
+> produção quando o back-end estiver no Render. Vale extrair para uma
+> variável de ambiente (`VITE_API_URL`) antes do deploy.
 
 ### `CadastroPage` (`/cadastro`)
 Formulário de cadastro com campos: nome, nome social (opcional, com texto de
@@ -84,10 +94,13 @@ como funciona o case, avaliação/confidencialidade, evolução de nível). Seta
 de navegação ficam desabilitadas nas pontas; barra de progresso com bolinhas
 indica o slide atual; botão "Finalizar Tutorial" aparece só no último slide.
 
-> ⚠️ **Bug conhecido:** o botão "Finalizar Tutorial" chama `navigate("/lobby")`,
-> mas o componente nunca declara `const navigate = useNavigate();` — apenas
-> importa o hook. Isso vai gerar um `ReferenceError` em tempo de execução ao
-> clicar no botão. É só adicionar a linha faltante antes do `return`.
+Já integrado com o back-end: ao finalizar, chama
+`PATCH http://127.0.0.1:8000/usuarios/{usuarioId}/tutorial-visto` (usando o
+`usuarioId` recebido via `state` da navegação vinda do `Login`) para marcar
+`primeiro_login` como `false`, e só então navega para `/lobby`. Se a chamada
+falhar, o erro é só logado no console — a navegação para `/lobby` acontece de
+qualquer forma (evita travar o usuário por causa de uma falha de rede nessa
+etapa não-crítica).
 
 ### `Lobby` (`/lobby`)
 Tela principal pós-login: `Navbar` + `CardProfile` (nível, XP, próximo nível)
@@ -114,7 +127,7 @@ Exibe o resultado do último case: `Score` (notas por competência) e `Resume`
 
 | Componente | Usado em | Função |
 |---|---|---|
-| `Navbar` | Lobby, LastResult | Cabeçalho com logo, nível do usuário (`Nivel`) e ícone de perfil (`ProfileIcon`) |
+| `Navbar` | Lobby, LastResult | Cabeçalho com logo, atalho para `/tutorial`, nível do usuário (`Nivel`) e ícone de perfil (`ProfileIcon`) |
 | `Nivel` | Navbar | Badge com a letra do nível atual (ex: "E" de Estagiário) |
 | `ProfileIcon` | Navbar | Botão de acesso ao perfil (ícone SVG inline) |
 | `CardProfile` | Lobby | Card com nível atual, barra de progresso de XP e próximo nível |
@@ -129,13 +142,24 @@ Exibe o resultado do último case: `Score` (notas por competência) e `Resume`
 
 ## 7. Estado atual e próximos passos
 
-- **Sem integração com back-end**: todas as telas usam dados mockados
-  (`console.log`, valores fixos). A camada de API ainda precisa ser plugada
-  nos formulários e nas telas de Lobby/Case/Resultado.
+- **Integração parcial com o back-end**: `Login` e `Tutorial` já consomem a
+  API real (`POST /login`, `PATCH /usuarios/{id}/tutorial-visto`). As demais
+  telas (`Lobby`, `OnCase`, `ProcessingSolution`, `LastResult`) ainda usam
+  dados mockados. O endpoint `POST /avaliacao` já devolve `notas_categorias`
+  no formato exato esperado pela prop `notas` do componente `Score` — ver
+  [`backend.md`](./backend.md#5-endpoints).
+- **URL da API hardcoded**: `Login` e `Tutorial` chamam `http://127.0.0.1:8000`
+  diretamente no código. Antes do deploy, extrair para uma variável de
+  ambiente (`VITE_API_URL` ou similar) que aponte para a URL do Render em
+  produção.
+- **`usuarioId` só existe em memória**: passado via `state` de navegação do
+  React Router entre `Login` → `Tutorial`/`Lobby`. Um refresh de página perde
+  essa informação, já que não há token/sessão persistida (ver
+  [`backend.md`](./backend.md#7-o-que-ainda-falta)).
 - **Validação de formulário**: `CadastroPage` só valida coincidência de
   e-mail/senha; não há validação de formato de CPF, força de senha ou
-  feedback de erro do back-end.
-- **Bug do Tutorial**: corrigir o `useNavigate()` ausente (ver seção 5).
+  feedback de erro do back-end. `CadastroPage` também ainda não chama
+  nenhuma API — não existe endpoint de cadastro no back-end ainda.
 - **Login social**: os botões de Google/Apple/LinkedIn ainda não disparam
   nenhum fluxo de OAuth real.
 
