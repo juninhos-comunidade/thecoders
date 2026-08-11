@@ -2,7 +2,16 @@ import "./index.css";
 import Timer from "../../components/timer";
 import SendMsgBar from "../../components/send-msg-bar";
 
-export default function CaseDescription({ title, dificulty, description, timeLimit, onSubmitSolution }) {
+
+export default function CaseDescription({
+    title,
+    dificulty,
+    description,
+    onSubmitSolution,
+    timeLimit,
+    envioBloqueado,
+}) {
+
     const databaseTimer = {
         isRunning: true,
         secondsRemaining: 18 * 60,
@@ -39,10 +48,24 @@ export default function CaseDescription({ title, dificulty, description, timeLim
                 </p>
             </div>
 
+            {envioBloqueado && (
+                <p className="envio-bloqueado-aviso">
+                    Você saiu da tela cheia e perdeu a chance de enviar o arquivo. Refaça o teste.
+                </p>
+            )}
+
             <SendMsgBar
-                placeholder="Subir arquivo da solução"
+
+                placeholder={
+                    envioBloqueado
+                        ? "Envio indisponível"
+                        : "Subir arquivo da solução"
+                }
                 onSubmit={onSubmitSolution}
-                navigateOnSubmit={false}
+                redirectTo="/processing-solution"
+                navigateOnSubmit={true}
+                disabled={envioBloqueado}
+
             />
         </div>
     );
