@@ -21,13 +21,34 @@ Cadastro/Login → Tutorial (primeiro acesso) → Lobby → Case (cronometrado) 
 - Vite (build e dev server)
 - JavaScript
 - React Router (`react-router-dom`) — navegação entre telas
-- Axios — comunicação HTTP com o back-end
+- `socket.io-client` — presente nas dependências, usado hoje só na tela `OnCase`
+  para detectar saída de tela cheia/troca de aba (`case:infracao_detectada`) e
+  escutar eventos de sincronização de sala (`case:redirecionar_lobby`,
+  `case:nova_case`)
 - ESLint — padronização de código
 
+> ⚠️ **Incompatibilidade de arquitetura:** o `OnCase` conecta em
+> `io("http://localhost:3000")`, mas o back-end real (abaixo) é FastAPI, que
+> não expõe um servidor Socket.IO. Ou essa comunicação em tempo real precisa
+> ser implementada no back-end (ex: com `python-socketio`), ou a tela precisa
+> ser migrada para outra estratégia (polling via REST, Supabase Realtime,
+> etc.). Ver detalhes em [`frontend.md`](./frontend.md#7-estado-atual-e-próximos-passos).
+
 **Back-end / API**
-> ⚠️ *A definir pela equipe — completar aqui a linguagem/framework, banco de
-> dados e forma de deploy do back-end (ex: Node/Express, Python/FastAPI, etc.).
-> O front-end já está preparado para consumir uma API via Axios.*
+- Python 3 + FastAPI
+- Supabase (Postgres gerenciado) como banco de dados, acessado via `supabase-py`
+- Groq API (`llama-3.3-70b-versatile`) para avaliação de soluções por IA,
+  chamada via `httpx` — avalia em 6 categorias (raciocínio lógico, qualidade
+  técnica, resolução de problemas, comunicação, priorização, colaboração);
+  a nota geral é a média dessas 6, calculada no back-end
+- Deploy: Render
+- Documentação completa em [`backend.md`](./backend.md)
+
+**Autenticação:** implementada via `POST /login` (compara `senha_hash` com
+bcrypt) e `PATCH /usuarios/{id}/tutorial-visto` (marca `primeiro_login` como
+`false` ao concluir o tutorial). A tela de `Login` do front-end já consulta
+essa API. Cadastro (`POST /cadastro` ou similar) ainda não tem endpoint —
+ver [`backend.md`](./backend.md#7-o-que-ainda-falta).
 
 ## 3. Modelo de Domínio
 
@@ -105,10 +126,22 @@ Gerado ao final da simulação, com feedback de desempenho apoiado por IA.
 | Atributo | Tipo |
 |---|---|
 | id | UUID |
-| nivelAlcancado | int |
+| nivelAlcancado | decimal (0.0–10.0) — média das 6 notas por categoria abaixo |
+| aprovado | boolean — `true` se nivelAlcancado > 7; concede XP ao usuário |
+| notaRaciocinioLogico | decimal (0.0–10.0) |
+| notaQualidadeTecnica | decimal (0.0–10.0) |
+| notaResolucaoProblemas | decimal (0.0–10.0) |
+| notaComunicacao | decimal (0.0–10.0) |
+| notaPriorizacao | decimal (0.0–10.0) |
+| notaColaboracao | decimal (0.0–10.0) |
 | feedbackSimulado | String |
 
 **Métodos:** `calcularRespostas()`, `gerarFeedback()`, `exibirAnimacaoNivel()`
+
+> `nivelAlcancado` era um inteiro na escala 0-100 nas primeiras versões do
+> back-end; foi alterado para decimal (0-10) quando o critério de aprovação
+> passou a ser a média das 6 notas por categoria. Detalhes da implementação
+> em [`backend.md`](./backend.md#5-endpoints).
 
 ### Enumerações
 
@@ -203,19 +236,17 @@ classDiagram
 
   class Resultado {
     id: UUID
-    nivelAlcancado: int
+    nivelAlcancado: decimal
+    aprovado: boolean
+    notaRaciocinioLogico: decimal
+    notaQualidadeTecnica: decimal
+    notaResolucaoProblemas: decimal
+    notaComunicacao: decimal
+    notaPriorizacao: decimal
+    notaColaboracao: decimal
     feedbackSimulado: String
     calcularRespostas()
     gerarFeedback()
-    exibirAnimacaoNivel()
-    exibirAnimacaoNivel()
-    exibirAnimacaoNivel()
-    exibirAnimacaoNivel()
-    exibirAnimacaoNivel()
-    exibirAnimacaoNivel()
-    exibirAnimacaoNivel()
-    exibirAnimacaoNivel()
-    exibirAnimacaoNivel()
     exibirAnimacaoNivel()
   }
 
@@ -264,6 +295,24 @@ classDiagram
 - **Dados fictícios**: em conformidade com o edital do hackathon (seção 8),
   todos os dados de teste utilizados na aplicação são mockados, sem captura de
   dados pessoais reais de terceiros.
+- **FastAPI + Supabase**: escolhidos pela curva de aprendizado rápida e pela
+  necessidade de banco gerenciado sem custo de infraestrutura extra durante o
+  hackathon.
+- **Groq para avaliação por IA**: escolhida por hospedar modelos open-source
+  (Llama 3.3) com inferência rápida o bastante para responder dentro de uma
+  requisição HTTP síncrona, e por ter um free tier viável para o volume de um
+  hackathon — evitando custo com APIs pagas (OpenAI, Anthropic, etc.).
+- **Avaliação em 6 categorias, com nota geral calculada no back-end**: pedir a
+  nota geral separadamente à IA arriscaria inconsistência com as notas
+  individuais (a IA "errar a conta"). Calculá-la como a média das 6 categorias
+  no próprio back-end garante que a nota geral seja sempre coerente com o
+  detalhamento mostrado ao usuário.
+- **Fallback quando a IA está indisponível**: se a Groq falhar (timeout, erro
+  HTTP, resposta malformada), a solução é aprovada por padrão em vez de
+  travar o fluxo do participante — prioriza a experiência do usuário em
+  detrimento da precisão da avaliação nesse cenário raro.
+- **B06 não persiste dados**: o endpoint que recebe a solução (`/solucao`)
+  apenas valida se as referências existem; toda a escrita em `resultados`
+  acontece em `/avaliacao`, evitando dois pontos gravando o mesmo dado.
 
-> ⚠️ Completar esta seção com decisões específicas de back-end/banco de dados
-> assim que definidas pela equipe.
+Mais detalhes de implementação do back-end em [`backend.md`](./backend.md).
