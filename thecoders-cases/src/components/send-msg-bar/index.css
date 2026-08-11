@@ -80,3 +80,23 @@
     fill: #1d1d1d;
     transform: translateX(1px);
 }
+
+.send-msg-bar--disabled .send-msg-bar__input {
+    color: #d92d20;
+    cursor: not-allowed;
+    opacity: 0.85;
+}
+
+.send-msg-bar--disabled .send-msg-bar__button {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+.send-msg-bar--disabled .send-msg-bar__input {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.send-msg-bar--disabled .send-msg-bar__button {
+    cursor: not-allowed;
+    opacity: 0.4;
+}

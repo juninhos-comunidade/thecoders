@@ -10,6 +10,7 @@ export default function SendMsgBar({
     buttonLabel = "Enviar",
     redirectTo,
     navigateOnSubmit = Boolean(redirectTo),
+    disabled = false,
 }) {
     const navigate = useNavigate();
 
@@ -17,6 +18,8 @@ export default function SendMsgBar({
     const currentValue = value !== undefined ? value : internalValue;
 
     const handleChange = (event) => {
+        if (disabled) return;
+
         const nextValue = event.target.value;
 
         if (onChange) {
@@ -29,6 +32,8 @@ export default function SendMsgBar({
 
     const handleSubmit = (event) => {
         event.preventDefault();
+
+        if (disabled) return;
 
         if (onSubmit) {
             onSubmit(currentValue);
@@ -44,7 +49,10 @@ export default function SendMsgBar({
     };
 
     return (
-        <form className="send-msg-bar" onSubmit={handleSubmit}>
+        <form
+            className={`send-msg-bar${disabled ? " send-msg-bar--disabled" : ""}`}
+            onSubmit={handleSubmit}
+        >
             <div className="send-msg-bar__frame">
                 <div className="send-msg-bar__state-layer">
                     <div className="send-msg-bar__content">
@@ -55,10 +63,16 @@ export default function SendMsgBar({
                             onChange={handleChange}
                             placeholder={placeholder}
                             aria-label="Mensagem"
+                            disabled={disabled}
                         />
                     </div>
 
-                    <button type="submit" className="send-msg-bar__button" aria-label={buttonLabel}>
+                    <button
+                        type="submit"
+                        className="send-msg-bar__button"
+                        aria-label={buttonLabel}
+                        disabled={disabled}
+                    >
                         <svg viewBox="0 0 24 24" aria-hidden="true">
                             <path d="M3.4 20.4L21 12 3.4 3.6l1.1 6.3L15 12l-10.5 2.1-1.1 6.3z" />
                         </svg>

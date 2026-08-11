@@ -84,3 +84,10 @@
     gap: 0.5rem;
     align-self: stretch;
 }
+
+.envio-bloqueado-aviso {
+    color: #d92d20;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin: 8px 0 4px;
+}
