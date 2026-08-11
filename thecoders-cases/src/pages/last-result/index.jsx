@@ -1,10 +1,30 @@
 import "./index.css";
+import { useLocation } from "react-router-dom";
 import Navbar from "../../components/navbar";
 import Buttons from "../../components/buttons";
 import Resume from "../../components/resume";
 import Score from "../../components/score";
 
+const NOTA_INDISPONIVEL = "—";
+
+function formatarNotasParaScore(notasCategorias) {
+    if (!notasCategorias) return null;
+
+    return Object.fromEntries(
+        Object.entries(notasCategorias).map(([chave, valor]) => [
+            chave,
+            valor ?? NOTA_INDISPONIVEL,
+        ])
+    );
+}
+
 export default function LastResult() {
+    const location = useLocation();
+    const resultado = location.state?.resultado;
+
+    const notas = formatarNotasParaScore(resultado?.notas_categorias);
+    const feedback = resultado?.feedback;
+
     return (
         <>
             {}
@@ -20,22 +40,31 @@ export default function LastResult() {
                     </div>
                 </div>
 
-                <div className="cards-container">
-                    <Score
-                        notas={{
-                            raciocinioLogico: "9,0",
-                            qualidadeTecnica: "8,5",
-                            resolucaoProblemas: "9,5",
-                            comunicacao: "7,0",
-                            priorizacao: "8,9",
-                            colaboracao: "9,0",
-                        }}
-                    />
+                {resultado ? (
+                    <>
+                        <div className="status-avaliacao">
+                            {resultado.aprovado ? (
+                                <p className="status-aprovado">
+                                    ✅ Aprovado {resultado.xp_ganho ? `(+${resultado.xp_ganho} XP)` : ""}
+                                </p>
+                            ) : (
+                                <p className="status-reprovado">❌ Não aprovado</p>
+                            )}
+                        </div>
 
-                    <Resume
-                        texto="Você apresentou uma solução consistente, bem estruturada e funcional.<br/><br/>Sua principal força foi a organização da arquitetura.<br/><br/>A maior oportunidade de melhoria está na documentação e na justificativa das decisões."
-                    />
-                </div>
+                        <div className="cards-container">
+                            <Score notas={notas} />
+                            <Resume texto={feedback || "Sem feedback disponível para este resultado."} />
+                        </div>
+                    </>
+                ) : (
+                    <div className="cards-container">
+                        <p>
+                            Nenhum resultado recente para mostrar. Resolva um case para ver sua
+                            avaliação aqui.
+                        </p>
+                    </div>
+                )}
             </div>
         </>
     );
