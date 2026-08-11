@@ -6,6 +6,7 @@ import btnGoogle from "../../assets/google.png.png";
 import btnLinkedIn from "../../assets/linkedin.png";
 import ilustracao from "../../assets/image.png";
 import logo from "../../assets/logo.svg";
+import { API_BASE_URL } from "../../config/api";
 import "./index.css";
 
 const REDES = [
@@ -36,7 +37,7 @@ export default function Login() {
     setErro("");
 
     try {
-        const resposta = await fetch("http://127.0.0.1:8000/login", {
+        const resposta = await fetch(`${API_BASE_URL}/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, senha }),
@@ -48,11 +49,12 @@ export default function Login() {
         }
 
         const usuario = await resposta.json();
+        const state = { usuarioId: usuario.id, usuarioNome: usuario.nome_completo };
 
         if (usuario.primeiro_login) {
-            navigate("/tutorial", { state: { usuarioId: usuario.id } });
+            navigate("/tutorial", { state });
         } else {
-            navigate("/lobby", { state: { usuarioId: usuario.id } });
+            navigate("/lobby", { state });
         }
     } catch (err) {
         setErro("Não foi possível conectar ao servidor");
