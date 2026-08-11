@@ -2,7 +2,7 @@ import "./index.css";
 import Timer from "../../components/timer";
 import SendMsgBar from "../../components/send-msg-bar";
 
-export default function CaseDescription({ title, dificulty, description, timeLimit }) {
+export default function CaseDescription({ title, dificulty, description, timeLimit, onSubmitSolution }) {
     const databaseTimer = {
         isRunning: true,
         secondsRemaining: 18 * 60,
@@ -41,8 +41,8 @@ export default function CaseDescription({ title, dificulty, description, timeLim
 
             <SendMsgBar
                 placeholder="Subir arquivo da solução"
-                redirectTo="/processing-solution"
-                navigateOnSubmit={true}
+                onSubmit={onSubmitSolution}
+                navigateOnSubmit={false}
             />
         </div>
     );
