@@ -1,147 +1,106 @@
-# theCoders Cases Backend
+# theCoders Cases — Backend
 
-## Visão Geral
+API do **theCoders Cases**, um simulador de cases em grupo para candidatos
+iniciantes em TI (Estagiário/Júnior), com avaliação de desempenho apoiada por
+IA. Para a visão geral do produto, veja o [README da raiz do projeto](../README.md).
 
-Este diretório é responsável pelo backend do projeto theCoders Cases. Ele será responsável por gerenciar a lógica de negócios, autenticação, armazenamento de dados, processamento dos cases e integração com serviços externos, como IA e avaliação de desempenho.
+> Documentação técnica completa (banco de dados, endpoints, integração com
+> IA) em [`docs/backend.md`](../docs/backend.md).
 
-Atualmente, esta pasta está em fase inicial e serve como base para o desenvolvimento da API e dos serviços do sistema.
+## Stack
 
-## Objetivo do Projeto
+- **FastAPI** (Python 3) — framework web
+- **Supabase** (Postgres gerenciado) — banco de dados, acessado via `supabase-py`
+- **Groq API** (`llama-3.3-70b-versatile`) — avaliação de soluções por IA, via `httpx`
+- **bcrypt** — hash e verificação de senha
+- **Pydantic** — validação de dados de entrada
+- **Uvicorn** — servidor ASGI
+- Deploy: **Render**
 
-O backend do theCoders Cases deve:
+## Estrutura de pastas
 
-- autenticar usuários e administradores;
-- gerenciar cadastros, login e recuperação de senha;
-- controlar o fluxo dos cases e das partidas;
-- armazenar informações dos usuários e dos resultados;
-- integrar análise de desempenho e feedback;
-- expor endpoints para o frontend consumir dados em tempo real.
-
-## Stack sugerida
-
-A stack pode ser definida conforme a necessidade do time, mas, em geral, o backend do projeto pode ser estruturado com:
-
-- Node.js
-- Express.js ou Fastify
-- PostgreSQL ou outro banco relacional
-- Prisma, Sequelize ou ORM equivalente
-- JWT para autenticação
-- dotenv para variáveis de ambiente
-- ESLint/Prettier para padronização
-
-## Estrutura de Pastas
-
-```text
+```
 thecoders-cases-back/
-├── README.md
-├── package.json
-├── .env.example
-├── src/
-│   ├── app.js
-│   ├── server.js
-│   ├── config/
-│   ├── controllers/
-│   ├── routes/
-│   ├── services/
-│   ├── models/
-│   ├── middlewares/
-│   ├── utils/
-│   └── validations/
-├── prisma/
-│   └── schema.prisma
-├── tests/
-│   └── ...
-└── docs/
-    └── ...
+├── main.py                 # instancia o FastAPI, CORS e inclui os routers
+├── database/
+│   └── supabase_client.py  # client do Supabase (lê SUPABASE_URL/SUPABASE_KEY do .env)
+├── models/                 # schemas Pydantic dos request bodies
+├── routers/                # endpoints da API
+├── services/
+│   └── avaliacao_ia.py     # integração com a Groq API
+├── supabase/
+│   ├── config.toml
+│   └── migrations/         # histórico de mudanças no schema do banco
+└── requirements.txt
 ```
 
-## Requisitos
+## Como rodar localmente
 
-Antes de iniciar o desenvolvimento, certifique-se de ter instalado:
-
-- Node.js 18+
-- npm ou yarn
-- Banco de dados configurado (ex.: PostgreSQL)
-- Editor de código (VS Code recomendado)
-
-## Instalação
+Pré-requisitos: Python 3.11+, uma conta no [Supabase](https://supabase.com)
+com o projeto do time, e uma chave da [Groq](https://console.groq.com/keys)
+(gratuita, sem cartão de crédito).
 
 ```bash
-# entrar na pasta do backend
 cd thecoders-cases-back
 
+# criar e ativar o ambiente virtual
+python -m venv .venv
+.venv\Scripts\Activate.ps1      # Windows (PowerShell)
+# source .venv/bin/activate     # Linux/macOS
+
 # instalar dependências
-npm install
+pip install -r requirements.txt
 ```
 
-## Configuração de Ambiente
-
-Crie um arquivo `.env` com base no `.env.example`:
+Crie um arquivo `.env` na raiz de `thecoders-cases-back`:
 
 ```env
-PORT=3000
-DATABASE_URL=postgresql://usuario:senha@localhost:5432/thecoders
-JWT_SECRET=sua_chave_secreta
+SUPABASE_URL=https://soquaptpgdmltauxjmcu.supabase.co
+SUPABASE_KEY=sua_chave_do_supabase
+GROQ_API_KEY=sua_chave_da_groq
 ```
 
-## Scripts
-
-Os scripts abaixo são exemplos de como o backend pode ser executado:
+Rode o servidor (a partir da raiz de `thecoders-cases-back`, **não** de
+dentro de `.venv`):
 
 ```bash
-# desenvolvimento
-npm run dev
-
-# produção
-npm run build
-npm run start
-
-# testes
-npm run test
+uvicorn main:app --reload
 ```
 
-## Rotas Planejadas
+API em `http://127.0.0.1:8000`, documentação interativa (Swagger) em
+`http://127.0.0.1:8000/docs`.
 
-Algumas rotas esperadas para o projeto incluem:
+## Banco de dados
 
-- `POST /auth/login`
-- `POST /auth/register`
-- `POST /auth/forgot-password`
-- `GET /users/:id`
-- `GET /cases`
-- `POST /cases`
-- `GET /results/:userId`
-- `POST /results/evaluate`
+Schema versionado em `supabase/migrations/`, aplicado com a Supabase CLI:
 
-A estrutura exata das rotas pode mudar conforme a evolução do backend.
+```bash
+supabase link --project-ref soquaptpgdmltauxjmcu   # uma vez por máquina
+supabase db push
+```
 
-## Fluxo de Trabalho
+Tabelas principais: `usuarios`, `cases`, `salas`, `sala_participantes`,
+`chat_mensagens`, `resultados`. Detalhamento completo de cada coluna em
+[`docs/backend.md`](../docs/backend.md#4-banco-de-dados).
 
-1. Definir a arquitetura da API.
-2. Criar modelos e relacionamento do banco.
-3. Desenvolver autenticação e autorização.
-4. Implementar os endpoints principais.
-5. Integrar regras de negócio e avaliação de casos.
-6. Validar com testes e documentação.
+## Endpoints
 
-## Boas Práticas
+| Método | Rota | Descrição |
+|---|---|---|
+| GET | `/health` | Verifica se a API e a conexão com o Supabase estão funcionando |
+| POST | `/login` | Autentica por e-mail/senha (bcrypt) |
+| PATCH | `/usuarios/{id}/tutorial-visto` | Marca o tutorial como visto (`primeiro_login = false`) |
+| POST | `/solucao` | Valida se uma solução pode ser enviada (não persiste) |
+| POST | `/avaliacao` | Avalia a solução com IA, persiste o resultado e concede XP |
 
-- manter endpoints bem organizados;
-- validar dados de entrada;
-- proteger rotas sensíveis com autenticação;
-- separar regras de negócio em services;
-- documentar erros e respostas da API;
-- usar variáveis de ambiente para configurações sensíveis.
+Request/response de cada endpoint, com exemplos, em
+[`docs/backend.md`](../docs/backend.md#5-endpoints).
 
-## Contribuição
+## O que ainda falta
 
-Para contribuir com este módulo:
+- Endpoint de cadastro (`POST /login` existe, mas não há criação de usuário)
+- Recuperação de senha
+- Sessão/token — hoje o front-end guarda o `usuario_id` só em memória (state de navegação)
+- Seed data para demonstração
 
-1. crie uma branch para a funcionalidade;
-2. desenvolva a implementação com testes;
-3. valide o comportamento localmente;
-4. envie a alteração por pull request com descrição clara.
-
-## Observação
-
-Este README foi criado como base inicial para a pasta do backend. Conforme o projeto evoluir, os itens acima devem ser ajustados para refletir a arquitetura final, os endpoints reais e as tecnologias escolhidas.
+Lista completa em [`docs/backend.md`](../docs/backend.md#7-o-que-ainda-falta).

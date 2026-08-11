@@ -1,16 +1,62 @@
-# React + Vite
+# theCoders Cases — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Interface do **theCoders Cases**, um simulador de cases em grupo para
+candidatos iniciantes em TI (Estagiário/Júnior), com avaliação de desempenho
+apoiada por IA. Para a visão geral do produto, veja o
+[README da raiz do projeto](../README.md).
 
-Currently, two official plugins are available:
+> Documentação técnica completa (rotas, páginas, componentes) em
+> [`docs/frontend.md`](../docs/frontend.md).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Stack
 
-## React Compiler
+- **React 19** — biblioteca de UI
+- **Vite** — build e dev server
+- **react-router-dom** — roteamento entre telas
+- **lucide-react**, **react-icons** — ícones
+- **ESLint** — padronização de código
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Como rodar localmente
 
-## Expanding the ESLint configuration
+Pré-requisito: [Node.js](https://nodejs.org) instalado.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+cd thecoders-cases
+npm i
+npm run dev
+```
+
+Aplicação disponível em `http://localhost:5173`.
+
+Para as telas de `Login` e `Tutorial` funcionarem de verdade (as únicas já
+integradas com a API — ver [`docs/frontend.md`](../docs/frontend.md#7-estado-atual-e-próximos-passos)),
+o back-end (`thecoders-cases-back`) precisa estar rodando em
+`http://127.0.0.1:8000` — veja o [README do backend](../thecoders-cases-back/README.md).
+
+## Scripts disponíveis
+
+| Comando | O que faz |
+|---|---|
+| `npm run dev` | Sobe o servidor de desenvolvimento (`http://localhost:5173`) |
+| `npm run build` | Gera o build de produção em `dist/` |
+| `npm run preview` | Serve localmente o build de produção, para testar antes do deploy |
+| `npm run lint` | Roda o ESLint em todo o projeto |
+
+## Estrutura de pastas
+
+```
+thecoders-cases/src/
+├── assets/       # logos, ícones e ilustrações estáticas
+├── components/   # componentes reutilizáveis entre páginas
+├── pages/        # uma pasta por tela, cada uma com index.jsx + index.css
+├── App.jsx       # componente raiz, apenas renderiza o Router
+├── main.jsx      # entrypoint (ReactDOM.createRoot)
+└── router.jsx    # definição de todas as rotas
+```
+
+Rotas, páginas e componentes documentados em detalhe em
+[`docs/frontend.md`](../docs/frontend.md).
+
+## Deploy
+
+Render.

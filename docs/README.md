@@ -8,6 +8,7 @@ Hackathon Comunidade Juninhos & Nortjobs.
 | Documento | Conteúdo |
 |---|---|
 | [`arquitetura.md`](./arquitetura.md) | Visão geral, stack, modelo de domínio e diagrama de classes |
+| [`backend.md`](./backend.md) | Documentação da implementação do back-end: banco de dados, endpoints e integração com IA |
 | [`frontend.md`](./frontend.md) | Documentação da implementação do front-end: rotas, páginas e componentes |
 
 ## Sobre o projeto
