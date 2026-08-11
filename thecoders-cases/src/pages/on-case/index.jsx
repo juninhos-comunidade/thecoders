@@ -2,7 +2,7 @@ import "./index.css";
 import ChatBox from "../../components/chat-box";
 import CaseDescription from "../../components/case-description";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { io } from "socket.io-client";
 
 const socket = io("http://localhost:3000", {
@@ -11,13 +11,20 @@ const socket = io("http://localhost:3000", {
 
 export default function OnCase() {
     const navigate = useNavigate();
+    const location = useLocation();
+    const usuarioId = location.state?.usuarioId;
+    const usuarioNome = location.state?.usuarioNome || "Você";
 
  
     const isNavigatingAway = useRef(false);
 
  
+    // TODO: id e salaId hoje são mockados. Quando o matchmaking (serviço de socket)
+    // passar a emitir "case:nova_case" com dados reais, esses campos devem vir de lá
+    // (ver socket.on("case:nova_case", ...) abaixo, que já atualiza currentCase inteiro).
     const [currentCase, setCurrentCase] = useState({
         id: 18,
+        salaId: null,
         title: "Case #18 - API de Agendamento",
         dificulty: "🟢 Fácil",
         description:
@@ -150,6 +157,23 @@ export default function OnCase() {
         };
     }, [enterFullscreen, exitFullscreen, emitirInfracaoSair, navigate]);
 
+    const handleSubmitSolution = useCallback(
+        (texto) => {
+            const solucaoEnviada = texto?.trim();
+            if (!solucaoEnviada) return;
+
+            navigate("/processing-solution", {
+                state: {
+                    usuarioId,
+                    caseId: currentCase.id,
+                    salaId: currentCase.salaId,
+                    solucaoEnviada,
+                },
+            });
+        },
+        [navigate, usuarioId, currentCase.id, currentCase.salaId]
+    );
+
     return (
         <div className="container-oncase">
             <CaseDescription
@@ -157,9 +181,10 @@ export default function OnCase() {
                 dificulty={currentCase.dificulty}
                 description={currentCase.description}
                 timeLimit={currentCase.timeLimit}
+                onSubmitSolution={handleSubmitSolution}
             />
 
-            <ChatBox messages={[]} user="Gabriela" />
+            <ChatBox messages={[]} user={usuarioNome} />
         </div>
     );
 }
