@@ -1,6 +1,7 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import logo from "../../assets/logo.svg";
 import { useState } from "react";
+import { API_BASE_URL } from "../../config/api";
 import "./index.css"
 import { FaCircleChevronLeft, FaCircleChevronRight } from "react-icons/fa6";
 
@@ -17,20 +18,21 @@ function Tutorial () {
     const [slideIndex, setSlideIndex] = useState(0);
     const location = useLocation();
     const usuarioId = location.state?.usuarioId;
+    const usuarioNome = location.state?.usuarioNome;
     const currentSlide = slides[slideIndex];
 
     const finalizarTutorial = async () => {
     try {
         if (usuarioId) {
             await fetch(
-                `http://127.0.0.1:8000/usuarios/${usuarioId}/tutorial-visto`,
+                `${API_BASE_URL}/usuarios/${usuarioId}/tutorial-visto`,
                 { method: "PATCH" }
             );
         }
     } catch (err) {
         console.log("Não foi possível marcar o tutorial como visto:", err);
     } finally {
-        navigate("/lobby");
+        navigate("/lobby", { state: { usuarioId, usuarioNome } });
     }
 };
 
