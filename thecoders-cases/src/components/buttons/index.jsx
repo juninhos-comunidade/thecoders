@@ -2,7 +2,7 @@ import "./index.css";
 import "../../App.css";
 import { useNavigate } from "react-router-dom";
 
-export default function Buttons({ label, variant = "primary", disabled = false, page }) {
+export default function Buttons({ label, variant = "primary", disabled = false, page, state }) {
     const className = ["btn-primary", variant === "white" ? "btn-primary--white" : ""].join(" ").trim();
     const navigate = useNavigate();
 
@@ -13,7 +13,7 @@ export default function Buttons({ label, variant = "primary", disabled = false, 
             disabled={disabled}
             onClick={() => {
                 if (!disabled && page) {
-                    navigate(page);
+                    navigate(page, state ? { state } : undefined);
                 }
             }}
         >
