@@ -15,13 +15,14 @@ export default function OnCase() {
     const usuarioId = location.state?.usuarioId;
     const usuarioNome = location.state?.usuarioNome || "Você";
 
- 
     const isNavigatingAway = useRef(false);
+
 
  
     // TODO: id e salaId hoje são mockados. Quando o matchmaking (serviço de socket)
     // passar a emitir "case:nova_case" com dados reais, esses campos devem vir de lá
     // (ver socket.on("case:nova_case", ...) abaixo, que já atualiza currentCase inteiro).
+
     const [currentCase, setCurrentCase] = useState({
         id: 18,
         salaId: null,
@@ -32,14 +33,34 @@ export default function OnCase() {
         timeLimit: 18,
     });
 
-    
-    const emitirInfracaoSair = useCallback(() => {
-        if (isNavigatingAway.current) return;
-        isNavigatingAway.current = true;
+    // Controla se o usuário perdeu o direito de enviar o arquivo
+    const [envioBloqueado, setEnvioBloqueado] = useState(false);
 
-        
-        socket.emit("case:infracao_detectada", {
-            motivo: "Um dos participantes saiu da tela cheia ou trocou de aba.",
+    const exitFullscreen = useCallback(() => {
+        if (!document.fullscreenElement) return;
+
+        const exit =
+            document.exitFullscreen ||
+            document.webkitExitFullscreen ||
+            document.msExitFullscreen;
+
+        if (exit) {
+            exit.call(document).catch((err) => {
+                console.warn("Não foi possível sair da tela cheia:", err);
+            });
+        }
+    }, []);
+
+    // Em vez de mandar pro lobby, agora bloqueia o envio e avisa o servidor
+    const emitirInfracaoSair = useCallback(() => {
+        setEnvioBloqueado((jaBloqueado) => {
+            if (jaBloqueado) return jaBloqueado;
+
+            socket.emit("case:infracao_detectada", {
+                motivo: "Um dos participantes saiu da tela cheia ou trocou de aba.",
+            });
+
+            return true;
         });
     }, []);
 
@@ -59,26 +80,9 @@ export default function OnCase() {
         }
     }, []);
 
-    const exitFullscreen = useCallback(() => {
-        if (!document.fullscreenElement) return;
-
-        const exit =
-            document.exitFullscreen ||
-            document.webkitExitFullscreen ||
-            document.msExitFullscreen;
-
-        if (exit) {
-            exit.call(document).catch((err) => {
-                console.warn("Não foi possível sair da tela cheia:", err);
-            });
-        }
-    }, []);
-
     useEffect(() => {
-       
         enterFullscreen();
 
-    
         const handleFirstInteraction = () => {
             enterFullscreen();
             window.removeEventListener("click", handleFirstInteraction);
@@ -88,7 +92,6 @@ export default function OnCase() {
         window.addEventListener("click", handleFirstInteraction);
         window.addEventListener("keydown", handleFirstInteraction);
 
-       
         const handleFullscreenChange = () => {
             const aindaEmFullscreen = !!(
                 document.fullscreenElement ||
@@ -101,25 +104,21 @@ export default function OnCase() {
             }
         };
 
-        
         const handleVisibilityChange = () => {
             if (document.hidden) {
                 emitirInfracaoSair();
             }
         };
 
-        
-        const handleBlur = () => {
-            emitirInfracaoSair();
-        };
+        // "blur" foi removido de propósito: ele disparava toda vez que
+        // qualquer diálogo nativo abria (ex: seletor de arquivo), jogando
+        // o usuário pro lobby sem ele ter saído de fato da tela cheia.
 
         document.addEventListener("fullscreenchange", handleFullscreenChange);
         document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
         document.addEventListener("msfullscreenchange", handleFullscreenChange);
         document.addEventListener("visibilitychange", handleVisibilityChange);
-        window.addEventListener("blur", handleBlur);
 
-        
         socket.on("case:redirecionar_lobby", (data) => {
             isNavigatingAway.current = true;
             exitFullscreen();
@@ -132,10 +131,10 @@ export default function OnCase() {
             });
         });
 
-    
         socket.on("case:nova_case", (novaCase) => {
             setCurrentCase(novaCase);
             isNavigatingAway.current = false;
+            setEnvioBloqueado(false); // libera de novo no próximo case
             enterFullscreen();
         });
 
@@ -146,9 +145,7 @@ export default function OnCase() {
             document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
             document.removeEventListener("msfullscreenchange", handleFullscreenChange);
             document.removeEventListener("visibilitychange", handleVisibilityChange);
-            window.removeEventListener("blur", handleBlur);
 
-            
             socket.off("case:redirecionar_lobby");
             socket.off("case:nova_case");
 
@@ -181,7 +178,11 @@ export default function OnCase() {
                 dificulty={currentCase.dificulty}
                 description={currentCase.description}
                 timeLimit={currentCase.timeLimit}
+
                 onSubmitSolution={handleSubmitSolution}
+
+                envioBloqueado={envioBloqueado}
+
             />
 
             <ChatBox messages={[]} user={usuarioNome} />
