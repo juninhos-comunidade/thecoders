@@ -24,7 +24,6 @@ const REDES = [
     },
 ];
 
-
 export default function Login() {
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
@@ -33,33 +32,34 @@ export default function Login() {
     const [erro, setErro] = useState("");
 
     const autenticar = async (e) => {
-    e.preventDefault();
-    setErro("");
+        e.preventDefault();
 
-    try {
-        const resposta = await fetch(`${API_BASE_URL}/login`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, senha }),
-        });
+        try {
+            const resposta = await fetch(`${API_BASE_URL}/login`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, senha }),
+            });
 
-        if (!resposta.ok) {
-            setErro("Email ou senha inválidos");
-            return;
+            if (!resposta.ok) {
+                setErro("E-mail ou senha incorretos");
+                return;
+            }
+
+            const usuario = await resposta.json();
+            const state = { usuarioId: usuario.id, usuarioNome: usuario.nome_completo };
+
+            setErro("");
+
+            if (usuario.primeiro_login) {
+                navigate("/tutorial", { state });
+            } else {
+                navigate("/lobby", { state });
+            }
+        } catch (err) {
+            setErro("Não foi possível conectar ao servidor");
         }
-
-        const usuario = await resposta.json();
-        const state = { usuarioId: usuario.id, usuarioNome: usuario.nome_completo };
-
-        if (usuario.primeiro_login) {
-            navigate("/tutorial", { state });
-        } else {
-            navigate("/lobby", { state });
-        }
-    } catch (err) {
-        setErro("Não foi possível conectar ao servidor");
-    }
-};
+    };
 
     return (
         <div className="pagina-login">
