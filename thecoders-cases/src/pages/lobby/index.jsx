@@ -5,17 +5,7 @@ import Navbar from "../../components/navbar";
 import CardProfile from "../../components/card-profile";
 import CardCases from "../../components/card-cases";
 import { API_BASE_URL } from "../../config/api";
-
-const NIVEL_ABREVIACAO = {
-    ESTAGIARIO: "E",
-    JUNIOR: "J",
-    SENIOR: "S",
-};
-
-const NIVEL = {
-    ESTAGIARIO: "Estagiário",
-    JUNIOR: "Júnior",
-};
+import { NIVEL_ABREVIACAO, NIVEL_LABEL as NIVEL, padronizarNivel } from "../../utils/nivel";
 
 const PROXIMO_NIVEL = {
     ESTAGIARIO: "Júnior",
@@ -27,11 +17,6 @@ const DIFICULDADE_POR_NIVEL = {
     ESTAGIARIO: "🟢 Fácil",
     JUNIOR: "🟡 Médio",
     SENIOR: "🔴 Difícil",
-};
-
-const padronizarNivel = (nivel) => {
-    if (!nivel) return "ESTAGIARIO";
-    return String(nivel).trim().toUpperCase().replace("Á", "A").replace("Í", "I").replace("É", "E").replace("Ó", "O").replace("Ú", "U");
 };
 
 export default function Lobby() {
@@ -67,12 +52,16 @@ export default function Lobby() {
         carregarPerfil();
     }, [usuarioId]);
 
-    const usuarioNivel = NIVEL[usuario.nivel] ?? "Estagiário";
+    // usuario.nivel é o código bruto vindo do backend (ex.: "JUNIOR"); todas as
+    // tabelas abaixo são indexadas por esse código. Só convertemos para o
+    // rótulo em português (ex.: "Júnior") no momento de exibir para o usuário.
+    const nivelCodigo = usuario.nivel;
+    const usuarioNivel = NIVEL[nivelCodigo] ?? "Estagiário";
     const usuarioExp = usuario.exp;
     const usuarioNome = usuario.nome;
-    const usuarioProximoNivel = PROXIMO_NIVEL[usuarioNivel] ?? null;
-    const caseDificuldade = DIFICULDADE_POR_NIVEL[usuarioNivel] ?? "🟢 Fácil";
-    const nivelExibido = NIVEL_ABREVIACAO[usuarioNivel] ?? "E";
+    const usuarioProximoNivel = PROXIMO_NIVEL[nivelCodigo] ?? null;
+    const caseDificuldade = DIFICULDADE_POR_NIVEL[nivelCodigo] ?? "🟢 Fácil";
+    const nivelExibido = NIVEL_ABREVIACAO[nivelCodigo] ?? "E";
 
     return (
         <>
