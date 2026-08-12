@@ -4,7 +4,7 @@ import Nivel from "../niveis";
 import logo from "../../assets/logo.svg";
 import Buttons from "../buttons";
 
-export default function Navbar({ nivel }) {
+export default function Navbar({ nivel, usuarioId, usuarioNome }) {
 	return (
 		<nav className="navbar">
 			<div className="left">
@@ -14,7 +14,7 @@ export default function Navbar({ nivel }) {
 			</div>
 
 			<div className="right">
-				<Buttons label="Tutorial" page="/tutorial" />
+				<Buttons label="Tutorial" page="/tutorial" state={{ usuarioId, usuarioNome }} />
 				<Nivel level={nivel} /> 
 				<ProfileIcon />
 			</div>
