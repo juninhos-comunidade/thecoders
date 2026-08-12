@@ -31,7 +31,7 @@ const DIFICULDADE_POR_NIVEL = {
 
 const padronizarNivel = (nivel) => {
     if (!nivel) return "ESTAGIARIO";
-    return String(nivel).trim().toUpperCase().replace("Á", "A").replace("Í", "I").replace("É", "E").replace("Ó", "O");
+    return String(nivel).trim().toUpperCase().replace("Á", "A").replace("Í", "I").replace("É", "E").replace("Ó", "O").replace("Ú", "U");
 };
 
 export default function Lobby() {
