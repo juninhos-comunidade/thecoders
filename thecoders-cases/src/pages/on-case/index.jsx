@@ -4,10 +4,68 @@ import CaseDescription from "../../components/case-description";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { io } from "socket.io-client";
+import { API_BASE_URL } from "../../config/api";
 
 const socket = io("http://localhost:3000", {
     autoConnect: true,
 });
+
+const mapearDificuldade = (valor) => {
+    const chave = String(valor || "FACIL").trim().toUpperCase();
+
+    const mapa = {
+        FACIL: "🟢 Fácil",
+        MEDIO: "🟡 Médio",
+        DIFICIL: "🔴 Difícil",
+    };
+
+    return mapa[chave] || "🟢 Fácil";
+};
+
+const converterTempoParaMinutos = (valor) => {
+    if (valor == null || valor === "") return 18;
+
+    if (typeof valor === "number" && Number.isFinite(valor)) {
+        return Math.max(1, Math.round(valor));
+    }
+
+    if (typeof valor === "string") {
+        const texto = valor.trim();
+
+        if (/^\d+(?:[.,]\d+)?$/.test(texto)) {
+            return Math.max(1, Math.round(Number(texto.replace(",", "."))));
+        }
+
+        const matchTempo = texto.match(/(\d+):(\d+):(\d+)/);
+        if (matchTempo) {
+            const [, horas, minutos, segundos] = matchTempo;
+            const totalMinutos = Number(horas) * 60 + Number(minutos) + Number(segundos) / 60;
+            return Math.max(1, Math.round(totalMinutos));
+        }
+
+        const matchMinutos = texto.match(/(\d+):(\d+)/);
+        if (matchMinutos) {
+            const [, minutos, segundos] = matchMinutos;
+            const totalMinutos = Number(minutos) + Number(segundos) / 60;
+            return Math.max(1, Math.round(totalMinutos));
+        }
+    }
+
+    return 18;
+};
+
+const normalizarCase = (caseData) => {
+    if (!caseData) return null;
+
+    return {
+        id: caseData.id,
+        salaId: caseData.salaId || null,
+        title: caseData.titulo || caseData.title || "Case sem título",
+        dificulty: mapearDificuldade(caseData.nivel_dificuldade || caseData.dificulty),
+        description: caseData.descricao || caseData.description || "Sem descrição disponível.",
+        timeLimit: converterTempoParaMinutos(caseData.tempo_minimo_busca ?? caseData.timeLimit ?? 18),
+    };
+};
 
 export default function OnCase() {
     const navigate = useNavigate();
@@ -17,21 +75,48 @@ export default function OnCase() {
 
     const isNavigatingAway = useRef(false);
 
-
- 
-    // TODO: id e salaId hoje são mockados. Quando o matchmaking (serviço de socket)
-    // passar a emitir "case:nova_case" com dados reais, esses campos devem vir de lá
-    // (ver socket.on("case:nova_case", ...) abaixo, que já atualiza currentCase inteiro).
-
     const [currentCase, setCurrentCase] = useState({
-        id: 18,
+        id: null,
         salaId: null,
-        title: "Case #18 - API de Agendamento",
+        title: "Carregando case...",
         dificulty: "🟢 Fácil",
-        description:
-            "Descrição do case - Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+        description: "Buscando detalhes do case no banco de dados...",
         timeLimit: 18,
     });
+
+    useEffect(() => {
+        const carregarCase = async () => {
+            const caseId = location.state?.caseId;
+
+            if (!caseId) {
+                try {
+                    const resposta = await fetch(`${API_BASE_URL}/cases`);
+                    if (!resposta.ok) return;
+
+                    const dados = await resposta.json();
+                    const proximoCase = dados.cases?.[0];
+                    if (proximoCase) {
+                        setCurrentCase(normalizarCase(proximoCase));
+                    }
+                } catch (erro) {
+                    console.error("Erro ao carregar o próximo case:", erro);
+                }
+                return;
+            }
+
+            try {
+                const resposta = await fetch(`${API_BASE_URL}/cases/${caseId}`);
+                if (!resposta.ok) return;
+
+                const dados = await resposta.json();
+                setCurrentCase(normalizarCase(dados));
+            } catch (erro) {
+                console.error("Erro ao carregar o case selecionado:", erro);
+            }
+        };
+
+        carregarCase();
+    }, [location.state?.caseId]);
 
     // Controla se o usuário perdeu o direito de enviar o arquivo
     const [envioBloqueado, setEnvioBloqueado] = useState(false);
