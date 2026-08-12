@@ -1,14 +1,15 @@
-create type nivel_expertise as enum ('ESTAGIARIO', 'JUNIOR');
-create type nivel_dificuldade as enum ('FACIL', 'MEDIO', 'DIFICIL');
+create type nivel_expertise as enum ('E', 'J');
+create type nivel_dificuldade as enum ('F', 'M', 'D');
 
 create table usuarios (
     id uuid primary key default gen_random_uuid(),
     nome_completo text not null,
     email text unique not null,
     senha_hash text not null,
-    nivel_expertise nivel_expertise not null default 'ESTAGIARIO',
+    nivel_expertise nivel_expertise not null default 'E',
     xp integer not null default 0,
-    nivel_dificuldade nivel_dificuldade not null default 'FACIL',
+    num_cases_resolvidos integer not null default 0,
+    nivel_dificuldade nivel_dificuldade not null default 'F',
     status_login boolean not null default false,
     primeiro_login boolean not null default true,
     criado_em timestamptz not null default now()
@@ -19,8 +20,7 @@ create table cases (
     titulo text not null,
     descricao text not null,
     nivel_dificuldade nivel_dificuldade not null,
-    tempo_minimo_busca interval,
-    temporizador_aberto interval,
+    duracao interval,
     criado_em timestamptz not null default now()
 );
 
@@ -29,23 +29,7 @@ create table salas (
     case_id uuid references cases(id),
     nivel_expertise nivel_expertise not null,
     nivel_dificuldade nivel_dificuldade not null,
-    numero_participantes integer not null default 0,
     criado_em timestamptz not null default now()
-);
-
-create table sala_participantes (
-    sala_id uuid references salas(id) on delete cascade,
-    usuario_id uuid references usuarios(id) on delete cascade,
-    entrou_em timestamptz not null default now(),
-    primary key (sala_id, usuario_id)
-);
-
-create table chat_mensagens (
-    id uuid primary key default gen_random_uuid(),
-    sala_id uuid references salas(id) on delete cascade,
-    usuario_id uuid references usuarios(id) on delete cascade,
-    mensagem text not null,
-    enviado_em timestamptz not null default now()
 );
 
 create table resultados (
