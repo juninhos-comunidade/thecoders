@@ -88,35 +88,47 @@ export default function OnCase() {
         const carregarCase = async () => {
             const caseId = location.state?.caseId;
 
-            if (!caseId) {
-                try {
-                    const resposta = await fetch(`${API_BASE_URL}/cases`);
+            try {
+                if (caseId) {
+                    const resposta = await fetch(`${API_BASE_URL}/cases/${caseId}`);
                     if (!resposta.ok) return;
 
                     const dados = await resposta.json();
-                    const proximoCase = dados.cases?.[0];
+                    setCurrentCase(normalizarCase(dados));
+                    return;
+                }
+
+                const perfilResposta = await fetch(`${API_BASE_URL}/usuarios/${usuarioId}/perfil`);
+                if (!perfilResposta.ok) {
+                    const respostaFallback = await fetch(`${API_BASE_URL}/cases`);
+                    if (!respostaFallback.ok) return;
+
+                    const dadosFallback = await respostaFallback.json();
+                    const proximoCase = dadosFallback.cases?.[0];
                     if (proximoCase) {
                         setCurrentCase(normalizarCase(proximoCase));
                     }
-                } catch (erro) {
-                    console.error("Erro ao carregar o próximo case:", erro);
+                    return;
                 }
-                return;
-            }
 
-            try {
-                const resposta = await fetch(`${API_BASE_URL}/cases/${caseId}`);
-                if (!resposta.ok) return;
+                const perfil = await perfilResposta.json();
+                const respostaCase = await fetch(
+                    `${API_BASE_URL}/cases/aleatorio?usuario_id=${usuarioId}&nivel_usuario=${encodeURIComponent(perfil.nivel_expertise || "ESTAGIARIO")}`
+                );
 
-                const dados = await resposta.json();
-                setCurrentCase(normalizarCase(dados));
+                if (!respostaCase.ok) return;
+
+                const dadosCase = await respostaCase.json();
+                setCurrentCase(normalizarCase(dadosCase));
             } catch (erro) {
-                console.error("Erro ao carregar o case selecionado:", erro);
+                console.error("Erro ao carregar o case do usuário:", erro);
             }
         };
 
-        carregarCase();
-    }, [location.state?.caseId]);
+        if (usuarioId || location.state?.caseId) {
+            carregarCase();
+        }
+    }, [location.state?.caseId, usuarioId]);
 
     // Controla se o usuário perdeu o direito de enviar o arquivo
     const [envioBloqueado, setEnvioBloqueado] = useState(false);
