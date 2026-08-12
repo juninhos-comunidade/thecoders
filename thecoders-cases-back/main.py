@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from database.supabase_client import supabase
-from routers import solucao, avaliacao, login, usuario
+from routers import solucao, avaliacao, login, usuario, cases
 
 app = FastAPI()
 
@@ -18,6 +18,7 @@ app.include_router(solucao.router)
 app.include_router(avaliacao.router)
 app.include_router(login.router)
 app.include_router(usuario.router)
+app.include_router(cases.router)
 
 
 @app.get("/health")
