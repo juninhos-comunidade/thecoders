@@ -3,7 +3,7 @@ import "../../App.css";
 
 import Buttons from "../buttons";
 
-export default function CardCases({ num, dificulty, limit, usuarioId, usuarioNome }) {
+export default function CardCases({ num = 0, dificuldade = "🟢 Fácil", limit = 10, usuarioId, usuarioNome }) {
     return (
         <div className="card-cases">
             <h3>Próximo Case</h3>
@@ -14,13 +14,13 @@ export default function CardCases({ num, dificulty, limit, usuarioId, usuarioNom
                 </div>
                 <div className="cases-dificuldade">
                     <p>Dificuldade dos cases: </p>
-                    <span>{dificulty}</span>
+                    <span>{dificuldade}</span>
                 </div>
                 <div className="next-cases">
                     <p>Conclua</p>
-                    <span>{limit - num}</span>
+                    <span>{Math.max(limit - num, 0)}</span>
                     <p>cases de nível</p>
-                    <span>{dificulty}</span>
+                    <span>{dificuldade}</span>
                 </div>
             </div>
             <div className="buttons">
