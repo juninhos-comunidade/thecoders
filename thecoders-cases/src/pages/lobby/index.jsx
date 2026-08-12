@@ -66,7 +66,7 @@ export default function Lobby() {
     return (
         <>
             <header className="header-azul">
-                <Navbar nivel={nivelExibido} />
+                <Navbar nivel={nivelExibido} usuarioId={usuarioId} usuarioNome={usuarioNome} />
             </header>
 
             <div className="container-lobby">

@@ -27,6 +27,7 @@ export default function LastResult() {
     const location = useLocation();
     const resultado = location.state?.resultado;
     const usuarioId = location.state?.usuarioId;
+    const usuarioNome = location.state?.usuarioNome;
 
     // Nível do usuário exibido na Navbar (E/J/S), buscado do perfil real —
     // por padrão parte de "E" e é atualizado assim que o perfil chega.
@@ -82,14 +83,14 @@ export default function LastResult() {
         <>
             {}
             <header className="header-azul">
-                <Navbar nivel={nivelExibido} />
+                <Navbar nivel={nivelExibido} usuarioId={usuarioId} usuarioNome={usuarioNome} />
             </header>
 
             <div className="container-last-result">
                 <div className="textos">
                     <h3>Resultado do último case</h3>
                     <div className="return">
-                        <Buttons label="Voltar ao Lobby" page="/lobby" />
+                        <Buttons label="Voltar ao Lobby" page="/lobby" state={{ usuarioId, usuarioNome }} />
                     </div>
                 </div>
 

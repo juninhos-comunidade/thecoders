@@ -24,7 +24,7 @@ export default function CardCases({ num = 0, dificuldade = "🟢 Fácil", limit 
                 </div>
             </div>
             <div className="buttons">
-                <Buttons label="Último Resultado" variant="white" disabled={false} page="/last-result" />
+                <Buttons label="Último Resultado" variant="white" disabled={false} page="/last-result" state={{ usuarioId, usuarioNome }} />
                 <Buttons label="Iniciar Case" page="/on-case" state={{ usuarioId, usuarioNome }} />
             </div>
         </div>

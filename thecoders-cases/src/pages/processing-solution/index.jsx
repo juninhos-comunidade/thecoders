@@ -9,7 +9,7 @@ const TEMPO_MINIMO_ANIMACAO_SEGUNDOS = 5;
 export default function ProcessingSolution() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { usuarioId, caseId, salaId, solucaoEnviada } = location.state || {};
+  const { usuarioId, usuarioNome, caseId, salaId, solucaoEnviada } = location.state || {};
 
   const [secondsLeft, setSecondsLeft] = useState(TEMPO_MINIMO_ANIMACAO_SEGUNDOS);
 
@@ -34,6 +34,8 @@ export default function ProcessingSolution() {
     if (avaliacaoRef.current.erro) {
       navigate("/lobby", {
         state: {
+          usuarioId,
+          usuarioNome,
           aviso:
             "Não foi possível avaliar sua solução agora. Tente novamente em instantes.",
         },
@@ -42,7 +44,7 @@ export default function ProcessingSolution() {
     }
 
     navigate("/last-result", {
-      state: { resultado: avaliacaoRef.current.resultado, usuarioId },
+      state: { resultado: avaliacaoRef.current.resultado, usuarioId, usuarioNome },
     });
   };
 

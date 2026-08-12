@@ -221,6 +221,8 @@ export default function OnCase() {
             exitFullscreen();
             navigate("/lobby", {
                 state: {
+                    usuarioId,
+                    usuarioNome,
                     aviso:
                         data?.mensagem ||
                         "Um participante saiu da tela de resolução. Todos foram redirecionados.",
@@ -249,7 +251,7 @@ export default function OnCase() {
             isNavigatingAway.current = true;
             exitFullscreen();
         };
-    }, [enterFullscreen, exitFullscreen, emitirInfracaoSair, navigate]);
+    }, [enterFullscreen, exitFullscreen, emitirInfracaoSair, navigate, usuarioId, usuarioNome]);
 
     const handleSubmitSolution = useCallback(
         (texto) => {
@@ -259,13 +261,14 @@ export default function OnCase() {
             navigate("/processing-solution", {
                 state: {
                     usuarioId,
+                    usuarioNome,
                     caseId: currentCase.id,
                     salaId: currentCase.salaId,
                     solucaoEnviada,
                 },
             });
         },
-        [navigate, usuarioId, currentCase.id, currentCase.salaId]
+        [navigate, usuarioId, usuarioNome, currentCase.id, currentCase.salaId]
     );
 
     return (
