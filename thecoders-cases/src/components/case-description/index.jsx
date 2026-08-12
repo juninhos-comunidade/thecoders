@@ -62,8 +62,7 @@ export default function CaseDescription({
                         : "Subir arquivo da solução"
                 }
                 onSubmit={onSubmitSolution}
-                redirectTo="/processing-solution"
-                navigateOnSubmit={true}
+                navigateOnSubmit={false}
                 disabled={envioBloqueado}
 
             />
