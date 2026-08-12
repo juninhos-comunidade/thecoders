@@ -1,5 +1,4 @@
 import "./index.css";
-import "../../App.css";
 import { useLocation } from "react-router-dom";
 import Navbar from "../../components/navbar";
 import CardProfile from "../../components/card-profile";
@@ -9,6 +8,14 @@ export default function Lobby() {
     const location = useLocation();
     const usuarioId = location.state?.usuarioId;
     const usuarioNome = location.state?.usuarioNome || "Usuário";
+    const usuarioNivel = location.state?.usuarioNivel || "Estagiário";
+    const usuarioExp = location.state?.usuarioExp || 0;
+    const proximosNiveis = {
+        ESTAGIÁRIO: "Júnior",
+        JUNIOR: "Sênior",
+    };
+    const usuarioProximoNivel = proximosNiveis[usuarioNivel] ?? null;
+    const caseDificuldade = location.state?.caseDificuldade || "🟢 Fácil";
 
     return (
         <>
@@ -24,10 +31,10 @@ export default function Lobby() {
                 </div>
 
                 <div className="cards">
-                    <CardProfile nivel="Estagiário" exp="0" nextLevel="Júnior" />
+                    <CardProfile nivel={usuarioNivel} exp={usuarioExp} nextLevel={usuarioProximoNivel} />
                     <CardCases
                         num="0"
-                        dificult="🟢 Fácil"
+                        dificult={caseDificuldade}
                         limit="10"
                         usuarioId={usuarioId}
                         usuarioNome={usuarioNome}
