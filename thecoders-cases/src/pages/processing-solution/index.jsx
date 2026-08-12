@@ -41,7 +41,9 @@ export default function ProcessingSolution() {
       return;
     }
 
-    navigate("/last-result", { state: { resultado: avaliacaoRef.current.resultado } });
+    navigate("/last-result", {
+      state: { resultado: avaliacaoRef.current.resultado, usuarioId },
+    });
   };
 
   // Contagem regressiva visual (não passa de 1s caso a avaliação ainda não tenha voltado).
