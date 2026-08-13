@@ -87,14 +87,14 @@ export default function LastResult() {
             </header>
 
             <div className="container-last-result">
-                <div className="textos">
-                    <h3>Resultado do último case</h3>
+                <div className="textos-last-result">
+                    <div className="h3-last-result">Resultado do último case</div>
                     <div className="return">
                         <Buttons label="Voltar ao Lobby" page="/lobby" state={{ usuarioId, usuarioNome }} />
                     </div>
                 </div>
 
-                <div className="cards-container">
+                <div className="cards-last-result">
                     <Score notas={notas} />
 
                     <Resume texto={feedback} />

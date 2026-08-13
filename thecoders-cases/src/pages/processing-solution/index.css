@@ -1,8 +1,9 @@
 .processing-page {
-    width: 100%;
-    min-height: calc(100vh - 4rem);
-    background: #ffffff;
-    color: var(--cor-primaria, #213a57);
+    display: flex;
+    width: 80rem;
+    height: 52rem;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .processing-screen {

@@ -1,6 +1,7 @@
 .card-cases {
     display: flex;
-    padding: 3rem 3rem;
+    width: 24.25rem;
+    padding: 3rem 1.5rem;
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
@@ -9,9 +10,23 @@
     background: rgba(65, 168, 234, 0.16);
     box-shadow: 4px 4px 4px 0 rgba(0, 0, 0, 0.10);
 }
-
-.texts {
+.h3-card-cases {
     display: flex;
+    width: 17.9375rem;
+    padding: 0 1.5rem;
+    align-items: center;
+    gap: 0.5rem;
+    color: #213A57;
+    font-family: Inter;
+    font-size: 1.5rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: var(--Static-Label-Large-Line-Height, 1.25rem); /* 83.333% */
+    letter-spacing: var(--Static-Label-Large-Tracking, 0.00625rem);
+}
+.infos-card-cases {
+    display: flex;
+    padding: 0 1.5rem;
     flex-direction: column;
     align-items: flex-start;
     gap: 0.25rem;
@@ -40,7 +55,7 @@ span {
 
 .buttons {
     display: flex;
-    padding-top: 1.5rem;
+    padding: 1.5rem 1.5rem 0 1.5rem;
     align-items: flex-start;
     gap: 0.5rem;
     align-self: stretch;

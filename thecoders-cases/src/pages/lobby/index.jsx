@@ -64,15 +64,15 @@ export default function Lobby() {
     const nivelExibido = NIVEL_ABREVIACAO[nivelCodigo] ?? "E";
 
     return (
-        <>
+        <div className="pagina-lobby">
             <header className="header-azul">
                 <Navbar nivel={nivelExibido} usuarioId={usuarioId} usuarioNome={usuarioNome} />
             </header>
 
             <div className="container-lobby">
-                <div className="textos">
-                    <h3>Bem-vindo, {usuarioNome}!</h3>
-                    <div className="title">Continue evoluindo resolvendo desafios reais</div>
+                <div className="textos-lobby">
+                    <div className="h3-lobby" >Boas-vindas, {usuarioNome}!</div>
+                    <div className="subtitle" > Continue evoluindo resolvendo desafios reais</div>
                 </div>
 
                 <div className="cards">
@@ -86,6 +86,6 @@ export default function Lobby() {
                     />
                 </div>
             </div>
-        </>
+        </div>
     );
 }
