@@ -84,6 +84,37 @@ export default function OnCase() {
         timeLimit: 18,
     });
 
+    // Cria a sala vinculada ao case assim que ele é carregado. Fix rápido
+    // enquanto o multiplayer real não existe: 1 usuário = 1 sala (ver
+    // routers/salas.py no backend). Sem isso, salaId fica sempre null e a
+    // avaliação por IA nunca é chamada em ProcessingSolution.
+    const criarSalaParaCase = async (caseNormalizado) => {
+        if (!caseNormalizado.id || !usuarioId) return;
+
+        try {
+            const respostaSala = await fetch(`${API_BASE_URL}/salas`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ case_id: caseNormalizado.id, usuario_id: usuarioId }),
+            });
+
+            if (!respostaSala.ok) return;
+
+            const sala = await respostaSala.json();
+            setCurrentCase((atual) =>
+                atual.id === caseNormalizado.id ? { ...atual, salaId: sala.id } : atual
+            );
+        } catch (erro) {
+            console.error("Erro ao criar sala para o case:", erro);
+        }
+    };
+
+    const aplicarCase = (caseData) => {
+        const caseNormalizado = normalizarCase(caseData);
+        setCurrentCase(caseNormalizado);
+        criarSalaParaCase(caseNormalizado);
+    };
+
     useEffect(() => {
         const carregarCase = async () => {
             const caseId = location.state?.caseId;
@@ -94,7 +125,7 @@ export default function OnCase() {
                     if (!resposta.ok) return;
 
                     const dados = await resposta.json();
-                    setCurrentCase(normalizarCase(dados));
+                    aplicarCase(dados);
                     return;
                 }
 
@@ -106,7 +137,7 @@ export default function OnCase() {
                     const dadosFallback = await respostaFallback.json();
                     const proximoCase = dadosFallback.cases?.[0];
                     if (proximoCase) {
-                        setCurrentCase(normalizarCase(proximoCase));
+                        aplicarCase(proximoCase);
                     }
                     return;
                 }
@@ -119,7 +150,7 @@ export default function OnCase() {
                 if (!respostaCase.ok) return;
 
                 const dadosCase = await respostaCase.json();
-                setCurrentCase(normalizarCase(dadosCase));
+                aplicarCase(dadosCase);
             } catch (erro) {
                 console.error("Erro ao carregar o case do usuário:", erro);
             }
@@ -128,6 +159,7 @@ export default function OnCase() {
         if (usuarioId || location.state?.caseId) {
             carregarCase();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location.state?.caseId, usuarioId]);
 
     // Controla se o usuário perdeu o direito de enviar o arquivo
