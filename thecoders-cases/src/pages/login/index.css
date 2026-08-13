@@ -2,29 +2,26 @@
 
 .pagina-login {
   display: flex;
-  min-height: 100vh;
-  width: 100%;
-  background: #ffffff;
-  font-family: "Inter", sans-serif;
+  width: 80rem;
+  height: 52rem;
+  padding: 5.25rem 6.25rem;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center; /* Mantém o bloco geral centralizado */
-  padding: 2rem;
-  box-sizing: border-box;
 }
 
 .coluna-apresentacao {
-  flex: 1;
-  max-width: 550px;
   display: flex;
+  width: 34.4375rem;
+  padding: 0 0.75rem;
   flex-direction: column;
   align-items: flex-start;
-  padding: 3rem 2rem; /* padding simétrico, corrigido */
+  gap: 1.5rem;
+  flex-shrink: 0;
 }
 
 .marca {
-  display: flex;
-  align-items: center;
-  margin-bottom: 2.5rem;
+  width: 17.8125rem;
+  height: 6.4375rem;
 }
 
 .marca-logo {
@@ -34,29 +31,41 @@
 }
 
 .coluna-apresentacao h1 {
-  font-size: 36px;
-  font-weight: 700;
-  line-height: 1.2;
-  color: #1e3a8a;
-  margin-bottom: 1rem;
-  max-width: 440px;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  align-self: stretch;
+  flex: 1 0 0;
+  color: #0F3A6E;
+  font-family: Inter;
+  font-size: 2.25rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
 }
 
 .coluna-apresentacao p {
-  font-size: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  align-self: stretch;
+  flex: 1 0 0;
+  align-self: stretch;
+  color: #1D1D1D;
+  font-family: Inter;
+  font-size: 1.5rem;
+  font-style: normal;
   font-weight: 400;
-  line-height: 1.5;
-  color: #334155;
-  margin-bottom: 2rem;
-  max-width: 440px;
+  line-height: normal;
 }
 
 .ilustracao {
-  width: 360px;
-  max-width: 100%;
-  height: auto;
-  margin-top: 1.5rem;
-  /* align-self removido para seguir o alinhamento padrão do container */
+  display: flex;
+  padding: 0 4.5rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.625rem;
+  align-self: stretch;
 }
 
 .coluna-login {

@@ -1,16 +1,23 @@
 .pagina-esqueci-senha {
-  min-height: 100vh;
   display: flex;
+  width: 80rem;
+  height: 52rem;
+  padding: 5rem 24.9375rem 0 25rem;
   flex-direction: column;
   align-items: center;
-  padding: 60px 20px 40px;
-  background: #fff;
-  box-sizing: border-box;
+  gap: 0.625rem;
 }
 
 .pagina-esqueci-senha .logo {
   width: 250px;
   margin-bottom: 48px;
+}
+
+.container-forms {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .card {
@@ -20,7 +27,7 @@
   width: 100%;
   max-width: 420px;
   text-align: center;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
 }
 
 .card h2 { color: #1e3a5f; font-size: 18px; margin-bottom: 12px; }

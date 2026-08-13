@@ -6,7 +6,6 @@
 
 .cadastro-wrapper {
   min-height: 100vh;
-  background-color: #f8fafc;
   display: flex;
   flex-direction: column;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -51,7 +50,7 @@
   background: #ffffff;
   border-radius: 16px;
   padding: 36px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   gap: 18px;
