@@ -32,7 +32,7 @@ Cadastro/Login → Tutorial (primeiro acesso) → Lobby → Case (cronometrado) 
 > não expõe um servidor Socket.IO. Ou essa comunicação em tempo real precisa
 > ser implementada no back-end (ex: com `python-socketio`), ou a tela precisa
 > ser migrada para outra estratégia (polling via REST, Supabase Realtime,
-> etc.). Ver detalhes em [`frontend.md`](./frontend.md#7-estado-atual-e-próximos-passos).
+> etc.). Ver detalhes em [`frontend.md`](./frontend.md#7-integração-com-o-back-end).
 
 **Back-end / API**
 - Python 3 + FastAPI
@@ -84,27 +84,44 @@ da simulação.
 | Atributo | Tipo |
 |---|---|
 | etapas | List\<String\> |
-| usuarioId | UUID |
 | exibido | boolean |
 
 **Métodos:** `exibirTutorial()`, `explicarNiveis()`, `explicarConfidencialidade()`,
 `explicarLGPD()`
 
-### `Lobby` (sala de case)
-Onde os participantes se reúnem antes do início do case.
+### `Lobby`
+**Não é uma sala** — é o painel pessoal do usuário (a tela `/lobby` do
+front-end): perfil, XP e histórico de resultados. Existe 1:1 com cada
+`Usuario`.
 
 | Atributo | Tipo |
 |---|---|
+| usuarioId | UUID |
+| historicoResultados | List\<Resultado\> |
+| usuarioAtual | Usuario |
+
+**Métodos:** `iniciarCase()`, `visualizarResultados()`
+
+### `Sala`
+Representa uma rodada ativa vinculada a um `Case` específico. É o que antes
+chamávamos de "sala de case" — quem reúne os participantes.
+
+| Atributo | Tipo |
+|---|---|
+| id | UUID |
+| case_id | UUID |
 | nivelExpertise | NivelExpertise (enum) |
 | nivelDificuldade | NivelDificuldade (enum) |
-| numeroParticipantes | int |
-| participantes | List\<Usuario\> |
 
-**Métodos:** `iniciarCase()`, `visualizarResultados()`, `exibirCase()`,
-`definirDificuldadePorXp()`
+**Métodos:** `exibirCase()`, `definirDificuldadePorXp()`
 
 A dificuldade do case é definida automaticamente com base no XP acumulado
-pelos participantes (`definirDificuldadePorXp()`).
+pelo usuário (`definirDificuldadePorXp()`).
+
+> ⚠️ `Sala` já teve `numeroParticipantes` e `participantes: List<Usuario>` em
+> versões anteriores do schema. Esses campos foram removidos direto no
+> Supabase (fora das migrations versionadas) — ver [`backend.md`](./backend.md#4-banco-de-dados)
+> para o schema real atual e a recomendação de regularizar isso numa migration.
 
 ### `Case`
 O desafio propriamente dito, cronometrado.
@@ -116,7 +133,6 @@ O desafio propriamente dito, cronometrado.
 | descricao | String |
 | nivelDificuldade | NivelDificuldade (enum) |
 | tempoMinimoBusca | Time |
-| temporizadorAberto | Time |
 
 **Métodos:** `iniciarTemporizador()`, `exibirCaseTelaCheia()`, `abrirChat()`
 
@@ -150,24 +166,27 @@ Gerado ao final da simulação, com feedback de desempenho apoiado por IA.
 
 ### Relacionamentos principais
 
-- `Usuario` **possui** `Tutorial` (visualizado no primeiro login)
-- `Usuario` **participa** de `Lobby`
+- `Usuario` **possui** `Lobby` (1:1 — o painel pessoal do usuário)
+- `Usuario` **visualiza no primeiro login** `Tutorial` (0..1)
+- `Usuario` **participa** de `Sala` (0..*)
 - `Usuario` **é classificado como** `NivelExpertise`
-- `Lobby` **contém** `Case`
-- `Case` **é configurado com** `NivelDificuldade`
-- `Case` **gera** `Resultado`
-- `Usuario` **possui** `Resultado`
-
-> ⚠️ Os nomes das classes acima (`Lobby`, `Case`, `Resultado`, `Tutorial`) foram
-> inferidos a partir do diagrama em `/docs/diagrama.png`. Vale a pena a equipe
-> conferir rapidamente se batem com os nomes reais usados no diagrama antes da
-> entrega final.
+- `Lobby` **histórico** `Resultado` (0..*)
+- `Sala` **contém** `Case` (composição — uma sala não existe sem seu case)
+- `Sala` **é configurada com** `NivelDificuldade`
+- `Case` **gera** `Resultado` (0..1 no diagrama; na prática, cada `Sala` gera
+  no máximo um `Resultado` por tentativa — um mesmo `Case` pode ter vários
+  `Resultado` ao longo do tempo, um por `Sala`/usuário)
 
 ## 4. Diagrama de Classes
 
-O diagrama completo está disponível em [`/docs/diagrama.png`](./diagrama.png).
-
-Versão em Mermaid (útil para versionamento e leitura direto no GitHub):
+> ⚠️ **`/docs/diagrama.png` está desatualizado** — foi gerado antes das
+> alterações feitas direto no Supabase (remoção de `numeroParticipantes`/
+> `participantes` de `Sala`, ajuste de `Resultado` para as 6 notas por
+> categoria). O Mermaid abaixo é a versão atual e deve ser tratado como fonte
+> da verdade até que o PNG seja regenerado. Recomendamos gerar um novo PNG
+> a partir deste bloco (ex: via [mermaid.live](https://mermaid.live)) e
+> substituir o arquivo antigo, ou remover o PNG e manter só o Mermaid — ele
+> já renderiza direto na página do GitHub.
 
 ```mermaid
 classDiagram
@@ -203,16 +222,15 @@ classDiagram
     exibido: boolean
     exibirTutorial()
     explicarNiveis()
-    explicarConfidencialidade()    
-    explicarLGPD()    
+    explicarConfidencialidade()
+    explicarLGPD()
   }
 
   class Sala {
     id: UUID
+    case_id: UUID
     nivelExpertise: NivelExpertise
     nivelDificuldade: NivelDificuldade
-    numeroParticipantes: int
-    participantes: List~Usuario~
     exibirCase()
     definirDificuldadePorXp()
   }
@@ -223,15 +241,9 @@ classDiagram
     descricao: String
     nivelDificuldade: NivelDificuldade
     tempoMinimoBusca: Time
-    temporizadorAberto: Time
     iniciarTemporizador()
     exibirCaseTelaCheia()
     abrirChat()
-  }
-
-  class Chat {
-    mensagens: List~String~
-    enviarMensagem()
   }
 
   class Resultado {
@@ -270,9 +282,13 @@ classDiagram
   Lobby "1" -- "0..*" Resultado : histórico
   Sala "1" *-- "1" Case : contém
   Sala "1" -- "1" NivelDificuldade : configurada com
-  Case "1" *-- "1" Chat : possui
   Case "1" -- "0..1" Resultado : gera
 ```
+
+> **Nota:** o chat da sala (`ChatBox` no front-end, tabela `chat_mensagens` no
+> banco) não aparece neste diagrama de domínio — ele existe na implementação
+> mas não foi modelado como classe aqui. Se fizer sentido pro time, vale
+> incluir numa próxima revisão do diagrama.
 
 ## 5. Fluxo da Aplicação
 
