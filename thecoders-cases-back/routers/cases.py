@@ -1,4 +1,5 @@
 import random
+import unicodedata
 
 from fastapi import APIRouter, HTTPException
 
@@ -7,12 +8,19 @@ from database.supabase_client import supabase
 router = APIRouter(prefix="/cases", tags=["cases"])
 
 
+def _remover_acentos(texto: str) -> str:
+    return "".join(
+        c for c in unicodedata.normalize("NFD", texto)
+        if unicodedata.category(c) != "Mn"
+    )
+
+
 def _mapear_dificuldades_por_nivel(nivel_usuario: str | None):
-    nivel = (nivel_usuario or "ESTAGIARIO").strip().upper()
+    nivel = _remover_acentos((nivel_usuario or "ESTAGIARIO").strip().upper())
 
     mapa = {
         "ESTAGIARIO": ["FACIL"],
-        "JUNIOR": ["FACIL", "MEDIO"],
+        "JUNIOR": ["MEDIO"],
         "SENIOR": ["MEDIO", "DIFICIL"],
     }
 

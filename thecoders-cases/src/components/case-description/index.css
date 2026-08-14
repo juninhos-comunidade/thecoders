@@ -91,3 +91,102 @@
     font-weight: 600;
     margin: 8px 0 4px;
 }
+
+/* ---- Modal de confirmação de entrega ---- */
+
+.confirmar-entrega-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(33, 58, 87, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+}
+
+.confirmar-entrega-modal {
+    background-color: #fff;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    width: 100%;
+    max-width: 30rem;
+    box-shadow: 0 0.75rem 2rem rgba(33, 58, 87, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+}
+
+.confirmar-entrega-titulo {
+    margin: 0;
+    color: #213a57;
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: 1.75rem;
+}
+
+.confirmar-entrega-tempo {
+    margin: 0 0 0.75rem;
+    color: #1d1d1d;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.confirmar-entrega-label {
+    margin: 0 0 0.375rem;
+    color: #213a57;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.confirmar-entrega-resposta {
+    background-color: #f5f7fa;
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+    max-height: 14rem;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    color: #1d1d1d;
+    font-size: 0.95rem;
+    line-height: 1.4rem;
+    margin: 0 0 1.25rem;
+}
+
+.confirmar-entrega-pergunta {
+    margin: 0 0 1rem;
+    color: #1d1d1d;
+    font-size: 0.95rem;
+    line-height: 1.4rem;
+}
+
+.confirmar-entrega-acoes {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+
+.confirmar-entrega-botao {
+    padding: 0.625rem 1.125rem;
+    border-radius: 0.5rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: opacity 0.15s ease;
+}
+
+.confirmar-entrega-botao:hover {
+    opacity: 0.85;
+}
+
+.confirmar-entrega-botao--secundario {
+    background-color: #fff;
+    border-color: #d9d9d9;
+    color: #213a57;
+}
+
+.confirmar-entrega-botao--primario {
+    background-color: #79d9ef;
+    color: #213a57;
+    font-weight: 600;
+}
