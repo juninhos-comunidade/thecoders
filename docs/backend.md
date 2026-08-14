@@ -99,7 +99,18 @@ Schema gerenciado via migrações SQL na pasta `supabase/migrations/`, aplicadas
 | tempo_minimo_busca | interval |
 | temporizador_aberto | interval |
 
-**`salas`** — referencia `cases`, agrupa participantes de uma rodada.
+**`salas`** — referencia `cases`, representa uma rodada vinculada a um case.
+
+> ⚠️ **Migration desatualizada:** `supabase/migrations/20260805160216_create_schema_inicial.sql`
+> ainda cria `salas` com uma coluna `numero_participantes`, mas essa coluna
+> foi removida direto no painel do Supabase (fora do fluxo de migrations) e
+> `salas` **não tem `usuario_id`** — ver comentário em `routers/salas.py`.
+> Schema real hoje: `id, case_id, nivel_expertise, nivel_dificuldade, criado_em`.
+> Recomendado criar uma migration nova (`alter table salas drop column
+> numero_participantes;`) para o histórico de migrations voltar a refletir o
+> banco real — importante para a nota de "Arquitetura de Código" do edital,
+> já que hoje quem rodar `supabase db push` do zero não reproduz o schema
+> atual.
 
 **`sala_participantes`** — tabela de associação `salas` ↔ `usuarios`.
 
@@ -162,6 +173,71 @@ Marca `primeiro_login` como `false`, chamado pelo front-end ao concluir o carros
 ```
 
 **Response `404`** — usuário não encontrado.
+
+### `GET /usuarios/{usuario_id}/perfil`
+Retorna os dados de perfil usados pelo `Lobby` e pela `Navbar` no front-end
+(nome, nível, XP, se já viu o tutorial).
+
+**Response `200`:**
+```json
+{
+  "id": "uuid",
+  "nome_completo": "Nome do usuário",
+  "nivel_expertise": "ESTAGIARIO",
+  "xp": 40,
+  "primeiro_login": false
+}
+```
+
+**Response `404`** — usuário não encontrado.
+
+### `GET /cases`
+Lista todos os cases cadastrados (usado como fallback em `OnCase` quando não
+dá pra determinar o perfil do usuário).
+
+**Response `200`:**
+```json
+{ "cases": [ { "id": "uuid", "titulo": "...", "descricao": "...", "nivel_dificuldade": "FACIL", "tempo_minimo_busca": 18 } ] }
+```
+
+### `GET /cases/aleatorio?usuario_id=...&nivel_usuario=...`
+Sorteia um case entre os que são compatíveis com o nível do usuário
+(`ESTAGIARIO` → `FACIL`; `JUNIOR` → `FACIL`/`MEDIO`; `SENIOR` → `MEDIO`/`DIFICIL`).
+Se `usuario_id` for informado, o nível é buscado no banco (sobrescreve
+`nivel_usuario`). Se nenhum case bater com o nível, cai para qualquer case
+disponível como fallback.
+
+**Response `200`:** um case único, no mesmo formato de `GET /cases/{case_id}`.
+
+**Response `404`** — nenhum case cadastrado no banco.
+
+### `GET /cases/{case_id}`
+Busca um case específico por id.
+
+**Response `200`:**
+```json
+{ "id": "uuid", "titulo": "...", "descricao": "...", "nivel_dificuldade": "FACIL", "tempo_minimo_busca": 18 }
+```
+
+**Response `404`** — case não encontrado.
+
+### `POST /salas`
+Cria uma sala vinculada a um case, chamada pelo front-end assim que o `OnCase`
+carrega o case do usuário. Ver o alerta na seção 4 sobre o schema atual de
+`salas` e a limitação de "1 usuário = 1 sala" (fix rápido enquanto não há
+multiplayer real).
+
+**Request body:**
+```json
+{ "case_id": "uuid", "usuario_id": "uuid" }
+```
+
+**Response `200`:**
+```json
+{ "id": "uuid" }
+```
+
+**Response `404`** — case ou usuário não encontrado.
 
 ### `POST /solucao` (B06)
 Valida se uma solução pode ser enviada, checando se `usuario_id`, `case_id` e `sala_id` existem no banco.
@@ -248,5 +324,20 @@ Implementada em `services/avaliacao_ia.py`. Resumo do funcionamento:
 - **Cadastro**: existe `POST /login`, mas nenhum endpoint para criar um novo usuário (`senha_hash` precisa ser gerado no back-end, nunca recebido em texto puro do front). A tela de `CadastroPage` do front-end ainda não chama nenhuma API.
 - **Recuperação de senha**: sem endpoint; a tela `EsqueciSenha` do front-end é só um mock via `alert`.
 - **Seed data**: popular `usuarios`, `cases` e `salas` com dados mockados para demonstração (dados fictícios, conforme exigido pelo edital).
-- **Integração com o front-end**: `Login` e `Tutorial` já consomem a API real (`/login` e `/usuarios/{id}/tutorial-visto`); `Lobby`, `OnCase`, `/solucao` e `/avaliacao` ainda não — ver [`frontend.md`](./frontend.md#7-estado-atual-e-próximos-passos).
+- **Servidor Socket.IO não existe no back-end**: o front-end (`OnCase`) conecta em `io("http://localhost:3000")` esperando eventos `case:infracao_detectada`, `case:redirecionar_lobby` e `case:nova_case`, mas não há nenhum servidor Socket.IO neste repositório — nem em Python (`python-socketio` não está em `requirements.txt`), nem um serviço Node separado. Hoje isso significa que a detecção de "saiu da tela cheia" só ocorre no front (bloqueia o envio localmente) mas nunca é sincronizada entre participantes de fato. Precisa decidir: implementar um servidor Socket.IO (Python ou Node) e colocá-lo no repo/deploy, ou trocar essa camada por outra estratégia (Supabase Realtime, polling REST). Ver também [`frontend.md`](./frontend.md#7-integração-com-o-back-end).
 - **Sessão/token**: o login hoje devolve os dados do usuário na resposta, mas não gera nenhum token (JWT ou similar); o front-end guarda o `usuario_id` via `state` de navegação do React Router, que se perde num refresh de página.
+- **Migration de `salas` desatualizada**: ver alerta na seção 4 — o schema real (alterado direto no Supabase) não bate mais com `supabase/migrations/`.
+
+## 8. Integração com o front-end (estado atual)
+
+| Tela do front | Endpoint(s) consumidos |
+|---|---|
+| `Login` | `POST /login` |
+| `Tutorial` | `PATCH /usuarios/{id}/tutorial-visto` |
+| `Lobby` | `GET /usuarios/{id}/perfil` |
+| `OnCase` | `GET /cases/{id}` ou `GET /cases/aleatorio`, `POST /salas` |
+| `ProcessingSolution` | `POST /avaliacao` |
+| `LastResult` | `GET /usuarios/{id}/perfil` |
+| `CadastroPage`, `EsqueciSenha` | nenhum — ainda mockados |
+
+Ou seja: **todo o fluxo principal (login → tutorial → lobby → case → avaliação → resultado) já está de ponta a ponta conectado à API real.** O que falta é cadastro, recuperação de senha, sessão/token e a camada de tempo real (item acima).
