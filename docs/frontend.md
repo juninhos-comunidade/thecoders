@@ -11,13 +11,20 @@
 | Build/Dev server | Vite | ^8.1.1 |
 | Roteamento | react-router-dom | ^7.18.2 |
 | Ícones | lucide-react, react-icons | ^1.28.0 / ^5.7.0 |
+| Tempo real | socket.io-client | ^4.8.3 |
 | Lint | ESLint | ^10.6.0 |
 
-> ⚠️ O README principal do projeto menciona **Axios** para comunicação com o
-> back-end, mas o pacote não está nas dependências atuais (`package.json`).
-> Como a aplicação ainda roda 100% com dados mockados (`console.log`, valores
-> fixos em `useState`), isso não é um problema agora — mas fica o alerta para
-> quando a integração com a API for feita.
+Comunicação com o back-end via `fetch` nativo (não Axios — o README principal
+menciona Axios, mas o projeto usa `fetch` mesmo; vale corrigir o README).
+A URL base da API fica centralizada em `src/config/api.js`.
+
+> ⚠️ **`socket.io-client` conecta num servidor que não existe no repositório.**
+> `OnCase` faz `io("http://localhost:3000")`, mas não há nenhum servidor
+> Socket.IO no back-end (FastAPI puro, sem `python-socketio`) nem um serviço
+> Node separado. Isso significa que os eventos de sincronização entre
+> participantes (`case:redirecionar_lobby`, `case:nova_case`) e a notificação
+> de infração (`case:infracao_detectada`) nunca chegam a lugar nenhum hoje —
+> ver detalhes em [`backend.md`](./backend.md#7-o-que-ainda-falta).
 
 ## 2. Como rodar localmente
 
@@ -35,7 +42,11 @@ Aplicação disponível em `http://localhost:5173`.
 thecoders-cases/src/
 ├── assets/            # logos, ícones e ilustrações estáticas
 ├── components/        # componentes reutilizáveis entre páginas
+├── config/
+│   └── api.js         # API_BASE_URL — URL base do back-end, hoje hardcoded
 ├── pages/              # uma pasta por tela, cada uma com index.jsx + index.css
+├── utils/
+│   └── nivel.js        # normaliza/formata nivel_expertise (ESTAGIARIO/JUNIOR/SENIOR)
 ├── App.jsx            # componente raiz, apenas renderiza o Router
 ├── main.jsx            # entrypoint (ReactDOM.createRoot)
 └── router.jsx          # definição de todas as rotas (react-router-dom)
@@ -68,15 +79,12 @@ Formulário de e-mail/senha, com toggle de visibilidade da senha, mais três
 botões de login social (Google, Apple, LinkedIn — atualmente só logam no
 console). Links para `/recuperar` e `/cadastro`.
 
-Já integrado com o back-end: no submit, chama `POST http://127.0.0.1:8000/login`.
-Se `primeiro_login` vier `true` na resposta, navega para `/tutorial`; senão,
-para `/lobby` — em ambos os casos passando `usuarioId` via `state` de
-navegação do React Router. Erro de autenticação (401) exibe mensagem inline;
-falha de conexão com o servidor também é tratada com mensagem própria.
-
-> ⚠️ A URL da API está hardcoded (`http://127.0.0.1:8000`) — vai quebrar em
-> produção quando o back-end estiver no Render. Vale extrair para uma
-> variável de ambiente (`VITE_API_URL`) antes do deploy.
+Já integrado com o back-end: no submit, chama `POST /login` (via
+`API_BASE_URL`, ver seção 1). Se `primeiro_login` vier `true` na resposta,
+navega para `/tutorial`; senão, para `/lobby` — em ambos os casos passando
+`usuarioId` e `usuarioNome` via `state` de navegação do React Router. Erro de
+autenticação (401) exibe mensagem inline; falha de conexão com o servidor
+também é tratada com mensagem própria.
 
 ### `CadastroPage` (`/cadastro`)
 Formulário de cadastro com campos: nome, nome social (opcional, com texto de
@@ -95,8 +103,8 @@ de navegação ficam desabilitadas nas pontas; barra de progresso com bolinhas
 indica o slide atual; botão "Finalizar Tutorial" aparece só no último slide.
 
 Já integrado com o back-end: ao finalizar, chama
-`PATCH http://127.0.0.1:8000/usuarios/{usuarioId}/tutorial-visto` (usando o
-`usuarioId` recebido via `state` da navegação vinda do `Login`) para marcar
+`PATCH /usuarios/{usuarioId}/tutorial-visto` (usando o `usuarioId` recebido
+via `state` da navegação vinda do `Login`) para marcar
 `primeiro_login` como `false`, e só então navega para `/lobby`. Se a chamada
 falhar, o erro é só logado no console — a navegação para `/lobby` acontece de
 qualquer forma (evita travar o usuário por causa de uma falha de rede nessa
@@ -105,23 +113,66 @@ etapa não-crítica).
 ### `Lobby` (`/lobby`)
 Tela principal pós-login: `Navbar` + `CardProfile` (nível, XP, próximo nível)
 + `CardCases` (cases concluídos, dificuldade atual, atalho para o último
-resultado e para iniciar um novo case). Todos os valores estão hardcoded
-(`nivel="E"`, `exp="0"` etc.) aguardando integração com dados reais de usuário.
+resultado e para iniciar um novo case).
+
+Já integrado: assim que monta, chama `GET /usuarios/{usuarioId}/perfil` e
+atualiza nome/nível/XP com o dado real (antes disso, usa como fallback o que
+veio via `state` de navegação — nome e nível "ESTAGIARIO"). `nivel_expertise`
+bruto (`"ESTAGIARIO"`, `"JUNIOR"`, `"SENIOR"`) é normalizado com
+`padronizarNivel`/`NIVEL_LABEL`/`NIVEL_ABREVIACAO` de `utils/nivel.js` antes
+de virar texto em português ou a letra exibida na `Navbar`.
+
+> ⚠️ `num` (cases concluídos) em `CardCases` está fixo em `0` — ainda não há
+> endpoint para contar quantos cases o usuário já completou.
 
 ### `OnCase` (`/on-case`)
-Tela do case em si: entra automaticamente em tela cheia (com fallback no
-primeiro clique/tecla, caso o navegador bloqueie), e sai da tela cheia ao
-desmontar. Renderiza `CaseDescription` (enunciado + cronômetro) e `ChatBox`
-lado a lado.
+Tela do case em si — a mais complexa do front-end.
+
+- **Carregamento do case**: se veio um `caseId` via `state` (ex.: vindo de um
+  evento de socket), busca `GET /cases/{caseId}`; senão, busca o perfil do
+  usuário e chama `GET /cases/aleatorio` com o nível dele. Se o back-end
+  estiver fora do ar, cai no fallback `GET /cases` e pega o primeiro da lista.
+- **Criação de sala**: assim que o case carrega, chama `POST /salas` para
+  obter um `salaId` — necessário porque `/avaliacao` exige `sala_id`. É o fix
+  rápido "1 usuário = 1 sala" (ver [`backend.md`](./backend.md)).
+- **Tela cheia**: entra automaticamente (com fallback no primeiro clique/tecla
+  se o navegador bloquear) e sai ao desmontar.
+- **Anti-cheat via Socket.IO**: escuta `fullscreenchange` e `visibilitychange`;
+  se o usuário sai da tela cheia ou troca de aba, emite
+  `case:infracao_detectada` no socket e bloqueia localmente o envio do
+  arquivo (`envioBloqueado`, repassado para `CaseDescription`). Também escuta
+  `case:redirecionar_lobby` (redireciona todo mundo pro lobby) e
+  `case:nova_case` (troca o case em andamento). **Nenhum desses três eventos
+  tem um servidor do outro lado hoje** — ver o alerta na seção 1.
+- **Envio da solução**: `CaseDescription` chama `onSubmitSolution`, que
+  navega para `/processing-solution` levando `usuarioId`, `caseId`, `salaId`
+  e o texto da solução via `state`.
+
+Renderiza `CaseDescription` (enunciado + cronômetro + campo de envio) e
+`ChatBox` lado a lado.
 
 ### `ProcessingSolution` (`/processing-solution`)
-Tela de transição com checklist de "etapas de avaliação da IA" (atualmente
-estático) e contagem regressiva de 5 segundos que redireciona automaticamente
-para `/lobby`.
+Tela de transição com checklist de "etapas de avaliação da IA" (o checklist
+em si é estático/decorativo) e contagem regressiva visual de 5 segundos.
+
+Já integrado: dispara `POST /avaliacao` em paralelo à contagem, com
+`usuario_id`, `case_id`, `sala_id` e `solucao_enviada` recebidos via `state`.
+A navegação só acontece quando **as duas coisas terminam** — a animação
+mínima de 5s (por UX) e a resposta real da API — o que vier depois "segura"
+o outro via refs (`animacaoConcluidaRef`, `avaliacaoRef`). Se a avaliação
+falhar (erro de rede, HTTP, ou dados ausentes no `state`), redireciona para
+`/lobby` com um aviso; se der certo, vai para `/last-result` levando o
+`resultado` completo da API via `state`.
 
 ### `LastResult` (`/last-result`)
 Exibe o resultado do último case: `Score` (notas por competência) e `Resume`
 (feedback textual em HTML, renderizado via `dangerouslySetInnerHTML`).
+
+Já integrado: usa o `resultado` recebido via `state` (vindo de
+`ProcessingSolution`) — só considera válido se `status === "avaliado"` e tem
+`notas_categorias`; caso contrário (acesso direto à página, por exemplo),
+mostra notas zeradas e uma mensagem convidando a resolver um case. O nível
+exibido na `Navbar` é buscado à parte via `GET /usuarios/{usuarioId}/perfil`.
 
 ## 6. Componentes
 
@@ -133,35 +184,44 @@ Exibe o resultado do último case: `Score` (notas por competência) e `Resume`
 | `CardProfile` | Lobby | Card com nível atual, barra de progresso de XP e próximo nível |
 | `CardCases` | Lobby | Card com cases concluídos, dificuldade e atalhos para iniciar/ver resultado |
 | `Buttons` | CardCases, LastResult | Botão genérico com variantes `primary`/`white`, navega via `page` prop |
-| `CaseDescription` | OnCase | Título, dificuldade, `Timer` circular e descrição do case, com `SendMsgBar` para envio da solução |
-| `ChatBox` | OnCase | Chat lateral da sala, mantém mensagens em estado local |
-| `SendMsgBar` | CaseDescription, ChatBox | Input + botão de envio reutilizável; pode navegar para outra rota ao submeter (`navigateOnSubmit`) ou apenas disparar um callback (`onSubmit`) |
+| `CaseDescription` | OnCase | Título, dificuldade, `Timer` circular e descrição do case; dispara `onSubmitSolution` no envio e mostra aviso quando `envioBloqueado` (usuário saiu da tela cheia) |
+| `ChatBox` | OnCase | Chat lateral da sala, mantém mensagens em estado local; recebe `user` (nome de quem está logado) |
+| `SendMsgBar` | CaseDescription, ChatBox | Input + botão de envio reutilizável; pode navegar para outra rota ao submeter (`navigateOnSubmit`), apenas disparar um callback (`onSubmit`), ou ficar desabilitado (`disabled`) |
 | `Timer` | CaseDescription | Cronômetro circular (SVG) com contagem regressiva e barra de progresso animada |
 | `Score` | LastResult | Tabela de notas por competência (raciocínio lógico, qualidade técnica, etc.) |
 | `Resume` | LastResult | Bloco de feedback textual (HTML) |
 
-## 7. Estado atual e próximos passos
+> `ChatBox` mostra hoje uma lista fixa de nomes ("Elena entrou na sala",
+> "Eduardo entrou na sala"...) além do nome real do usuário logado (`user`) —
+> conteúdo de exemplo, não vindo de dado real nenhum. Sinalizando pra não
+> confundir com dado de verdade numa revisão de código.
 
-- **Integração parcial com o back-end**: `Login` e `Tutorial` já consomem a
-  API real (`POST /login`, `PATCH /usuarios/{id}/tutorial-visto`). As demais
-  telas (`Lobby`, `OnCase`, `ProcessingSolution`, `LastResult`) ainda usam
-  dados mockados. O endpoint `POST /avaliacao` já devolve `notas_categorias`
-  no formato exato esperado pela prop `notas` do componente `Score` — ver
-  [`backend.md`](./backend.md#5-endpoints).
-- **URL da API hardcoded**: `Login` e `Tutorial` chamam `http://127.0.0.1:8000`
-  diretamente no código. Antes do deploy, extrair para uma variável de
-  ambiente (`VITE_API_URL` ou similar) que aponte para a URL do Render em
-  produção.
-- **`usuarioId` só existe em memória**: passado via `state` de navegação do
-  React Router entre `Login` → `Tutorial`/`Lobby`. Um refresh de página perde
-  essa informação, já que não há token/sessão persistida (ver
-  [`backend.md`](./backend.md#7-o-que-ainda-falta)).
-- **Validação de formulário**: `CadastroPage` só valida coincidência de
-  e-mail/senha; não há validação de formato de CPF, força de senha ou
-  feedback de erro do back-end. `CadastroPage` também ainda não chama
-  nenhuma API — não existe endpoint de cadastro no back-end ainda.
+## 7. Integração com o back-end
+
+Ver a tabela completa em [`backend.md`](./backend.md#8-integração-com-o-front-end-estado-atual).
+Resumo: **o fluxo principal (login → tutorial → lobby → case → avaliação →
+resultado) já está de ponta a ponta com a API real.** O que ainda falta:
+
+- **Cadastro e recuperação de senha** (`CadastroPage`, `EsqueciSenha`): telas
+  prontas, mas sem nenhuma chamada de API — `CadastroPage` só valida
+  coincidência de e-mail/senha; não há validação de formato de CPF, força de
+  senha ou feedback de erro do back-end (que também não tem os endpoints
+  ainda).
 - **Login social**: os botões de Google/Apple/LinkedIn ainda não disparam
   nenhum fluxo de OAuth real.
+- **URL da API hardcoded**: `src/config/api.js` tem
+  `API_BASE_URL = "http://127.0.0.1:8000"` fixo. Antes do deploy, trocar para
+  uma variável de ambiente (`VITE_API_URL` via `import.meta.env`) que aponte
+  para a URL do Render em produção.
+- **`usuarioId` só existe em memória**: passado via `state` de navegação do
+  React Router, tela a tela. Um refresh de página perde essa informação, já
+  que não há token/sessão persistida (ver
+  [`backend.md`](./backend.md#7-o-que-ainda-falta)).
+- **Servidor Socket.IO ausente**: ver o alerta na seção 1 — a camada de
+  tempo real do `OnCase` (anti-cheat, sincronização de sala) não tem back-end
+  nenhum implementado ainda.
+- **`num` de cases concluídos fixo em `0`** no `Lobby` — falta um endpoint de
+  contagem.
 
 ## 8. Rastreabilidade com o edital
 
