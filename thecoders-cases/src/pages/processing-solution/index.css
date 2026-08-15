@@ -1,14 +1,18 @@
 .processing-page {
     display: flex;
-    width: 80rem;
-    height: 52rem;
+    width: 100%;
+    max-width: 80rem;
+    min-height: 52rem;
+    margin: 0 auto;
     flex-direction: column;
     align-items: flex-start;
+    box-sizing: border-box;
 }
 
 .processing-screen {
     width: 100%;
     padding: 72px 52px 24px 82px;
+    box-sizing: border-box;
 }
 
 .processing-header {
@@ -29,6 +33,7 @@
     align-items: flex-start;
     justify-content: space-between;
     gap: 2rem;
+    width: 100%;
 }
 
 .processing-status {
@@ -117,12 +122,14 @@
     justify-content: center;
     flex: 0 0 420px;
     padding-top: 1.25rem;
+    max-width: 100%;
 }
 
 .hourglass {
     position: relative;
     width: 400px;
     height: 430px;
+    max-width: 100%;
     filter: drop-shadow(0 22px 18px rgba(84, 57, 30, 0.18));
 }
 
@@ -228,6 +235,10 @@
 }
 
 @media (max-width: 980px) {
+    .processing-page {
+        min-height: auto;
+    }
+
     .processing-screen {
         padding: 48px 28px 24px;
     }
@@ -244,5 +255,30 @@
     .hourglass-scene {
         flex-basis: auto;
         width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .processing-screen {
+        padding: 40px 16px 24px;
+    }
+
+    .hourglass {
+        width: 260px;
+        height: 280px;
+    }
+
+    .hourglass-neck {
+        top: 98px;
+        height: 96px;
+    }
+
+    .hourglass-body {
+        top: 24px;
+        height: 220px;
+    }
+
+    .status-item {
+        font-size: 1.05rem;
     }
 }
