@@ -19,9 +19,16 @@ const NOTAS_ZERADAS = {
     colaboracao: "0,0",
 };
 
+
+
 const FEEDBACK_SEM_CASE =
     "Você ainda não concluiu nenhum case.<br/><br/>" +
     "Participe de um case no lobby para receber sua avaliação de desempenho e acompanhar sua evolução por aqui.";
+
+    function formatarNota(valor) {
+    if (valor === null || valor === undefined) return "0,0";
+    return valor.toFixed(1).replace(".", ",");
+}
 
 export default function LastResult() {
     const location = useLocation();
@@ -32,6 +39,30 @@ export default function LastResult() {
     // Nível do usuário exibido na Navbar (E/J/S), buscado do perfil real —
     // por padrão parte de "E" e é atualizado assim que o perfil chega.
     const [nivelExibido, setNivelExibido] = useState("E");
+
+    const [ultimoResultadoBuscado, setUltimoResultadoBuscado] = useState(null);
+
+useEffect(() => {
+    if (resultado || !usuarioId) return;
+
+    let cancelado = false;
+
+    (async () => {
+        try {
+            const resposta = await fetch(`${API_BASE_URL}/usuarios/${usuarioId}/resultados`);
+            if (!resposta.ok || cancelado) return;
+
+            const dados = await resposta.json();
+            if (!cancelado) setUltimoResultadoBuscado(dados.ultimo_resultado);
+        } catch (erro) {
+            console.error("Não foi possível buscar o último resultado:", erro);
+        }
+    })();
+
+    return () => {
+        cancelado = true;
+    };
+}, [resultado, usuarioId]);
 
     useEffect(() => {
         if (!usuarioId) return;
@@ -59,25 +90,40 @@ export default function LastResult() {
 
     // Só existe um resultado "de verdade" quando o backend avaliou a solução
     // e retornou as notas por categoria (POST /avaliacao, status "avaliado").
-    const possuiResultadoValido =
-        Boolean(resultado) &&
-        resultado.status === "avaliado" &&
-        Boolean(resultado.notas_categorias);
+    
+    
+    const possuiResultadoDireto =
+    Boolean(resultado) &&
+    resultado.status === "avaliado" &&
+    Boolean(resultado.notas_categorias);
 
-    const notas = possuiResultadoValido
-        ? {
-              raciocinioLogico: resultado.notas_categorias.raciocinioLogico ?? "0,0",
-              qualidadeTecnica: resultado.notas_categorias.qualidadeTecnica ?? "0,0",
-              resolucaoProblemas: resultado.notas_categorias.resolucaoProblemas ?? "0,0",
-              comunicacao: resultado.notas_categorias.comunicacao ?? "0,0",
-              priorizacao: resultado.notas_categorias.priorizacao ?? "0,0",
-              colaboracao: resultado.notas_categorias.colaboracao ?? "0,0",
-          }
-        : NOTAS_ZERADAS;
+const possuiResultadoBuscado = Boolean(ultimoResultadoBuscado);
 
-    const feedback = possuiResultadoValido
-        ? resultado.feedback || FEEDBACK_SEM_CASE
-        : FEEDBACK_SEM_CASE;
+const notas = possuiResultadoDireto
+    ? {
+          raciocinioLogico: resultado.notas_categorias.raciocinioLogico ?? "0,0",
+          qualidadeTecnica: resultado.notas_categorias.qualidadeTecnica ?? "0,0",
+          resolucaoProblemas: resultado.notas_categorias.resolucaoProblemas ?? "0,0",
+          comunicacao: resultado.notas_categorias.comunicacao ?? "0,0",
+          priorizacao: resultado.notas_categorias.priorizacao ?? "0,0",
+          colaboracao: resultado.notas_categorias.colaboracao ?? "0,0",
+      }
+    : possuiResultadoBuscado
+    ? {
+          raciocinioLogico: formatarNota(ultimoResultadoBuscado.nota_raciocinio_logico),
+          qualidadeTecnica: formatarNota(ultimoResultadoBuscado.nota_qualidade_tecnica),
+          resolucaoProblemas: formatarNota(ultimoResultadoBuscado.nota_resolucao_problemas),
+          comunicacao: formatarNota(ultimoResultadoBuscado.nota_comunicacao),
+          priorizacao: formatarNota(ultimoResultadoBuscado.nota_priorizacao),
+          colaboracao: formatarNota(ultimoResultadoBuscado.nota_colaboracao),
+      }
+    : NOTAS_ZERADAS;
+
+const feedback = possuiResultadoDireto
+    ? resultado.feedback || FEEDBACK_SEM_CASE
+    : possuiResultadoBuscado
+    ? ultimoResultadoBuscado.feedback_simulado || FEEDBACK_SEM_CASE
+    : FEEDBACK_SEM_CASE;
 
     return (
         <>

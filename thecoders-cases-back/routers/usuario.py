@@ -55,7 +55,7 @@ def obter_resultados_usuario(usuario_id: str):
 
     concluidos = [linha for linha in resposta.data if linha["nivel_alcancado"] is not None]
     total_concluidos = len(concluidos)
-    ultimo_resultado = resposta.data[0] if resposta.data else None
+    ultimo_resultado = concluidos[0] if resposta.data else None
 
     return {
         "total_concluidos": total_concluidos,
