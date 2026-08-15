@@ -18,6 +18,7 @@ export default function ProcessingSolution() {
   const animacaoConcluidaRef = useRef(false);
   const avaliacaoRef = useRef({ concluida: false, resultado: null, erro: null });
   const jaNavegouRef = useRef(false);
+  const jaEnviouRef = useRef(false);
 
   const statusIcons = {
     done: "✓",
@@ -67,55 +68,45 @@ export default function ProcessingSolution() {
 
   // Chamada real ao endpoint de avaliação por IA (B09).
   useEffect(() => {
-    if (!usuarioId || !caseId || !salaId || !solucaoEnviada) {
-      avaliacaoRef.current = {
-        concluida: true,
-        resultado: null,
-        erro: "dados_ausentes",
-      };
-      animacaoConcluidaRef.current = true;
-      tentarNavegar();
-      return;
-    }
+  if (!usuarioId || !caseId || !salaId || !solucaoEnviada) {
+    avaliacaoRef.current = { concluida: true, resultado: null, erro: "dados_ausentes" };
+    animacaoConcluidaRef.current = true;
+    tentarNavegar();
+    return;
+  }
 
-    let cancelado = false;
+  if (jaEnviouRef.current) return;
+  jaEnviouRef.current = true;
 
-    (async () => {
-      try {
-        const resposta = await fetch(`${API_BASE_URL}/avaliacao`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            usuario_id: usuarioId,
-            case_id: caseId,
-            sala_id: salaId,
-            solucao_enviada: solucaoEnviada,
-          }),
-        });
+  (async () => {
+    try {
+      const resposta = await fetch(`${API_BASE_URL}/avaliacao`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          usuario_id: usuarioId,
+          case_id: caseId,
+          sala_id: salaId,
+          solucao_enviada: solucaoEnviada,
+        }),
+      });
 
-        if (cancelado) return;
-
-        if (!resposta.ok) {
-          avaliacaoRef.current = { concluida: true, resultado: null, erro: "http" };
-          tentarNavegar();
-          return;
-        }
-
-        const resultado = await resposta.json();
-        avaliacaoRef.current = { concluida: true, resultado, erro: null };
+      if (!resposta.ok) {
+        avaliacaoRef.current = { concluida: true, resultado: null, erro: "http" };
         tentarNavegar();
-      } catch {
-        if (cancelado) return;
-        avaliacaoRef.current = { concluida: true, resultado: null, erro: "rede" };
-        tentarNavegar();
+        return;
       }
-    })();
 
-    return () => {
-      cancelado = true;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [usuarioId, caseId, salaId, solucaoEnviada]);
+      const resultado = await resposta.json();
+      avaliacaoRef.current = { concluida: true, resultado, erro: null };
+      tentarNavegar();
+    } catch {
+      avaliacaoRef.current = { concluida: true, resultado: null, erro: "rede" };
+      tentarNavegar();
+    }
+  })();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [usuarioId, caseId, salaId, solucaoEnviada]);
 
   return (
     <div className="processing-page">

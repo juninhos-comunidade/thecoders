@@ -26,31 +26,38 @@ export default function Lobby() {
         nome: location.state?.usuarioNome || "Usuário",
         nivel: padronizarNivel(location.state?.usuarioNivel || "ESTAGIARIO"),
         exp: Number(location.state?.usuarioExp ?? 0),
+        casesConcluidos: 0,
     });
 
     useEffect(() => {
-        const carregarPerfil = async () => {
-            if (!usuarioId) return;
+    const carregarPerfil = async () => {
+        if (!usuarioId) return;
 
-            try {
-                const resposta = await fetch(`${API_BASE_URL}/usuarios/${usuarioId}/perfil`);
-                if (!resposta.ok) return;
+        try {
+            const resposta = await fetch(`${API_BASE_URL}/usuarios/${usuarioId}/perfil`);
+            if (!resposta.ok) return;
 
-                const dados = await resposta.json();
-                const nivel = padronizarNivel(dados.nivel_expertise || "ESTAGIARIO");
+            const dados = await resposta.json();
+            const nivel = padronizarNivel(dados.nivel_expertise || "ESTAGIARIO");
 
-                setUsuario((anterior) => ({
-                    nome: dados.nome_completo || anterior.nome,
-                    nivel,
-                    exp: Number(dados.xp ?? anterior.exp),
-                }));
-            } catch (erro) {
-                console.error("Não foi possível atualizar o perfil do lobby:", erro);
-            }
-        };
+            const respostaResultados = await fetch(`${API_BASE_URL}/usuarios/${usuarioId}/resultados`);
+            const dadosResultados = respostaResultados.ok
+                ? await respostaResultados.json()
+                : { total_concluidos: 0 };
 
-        carregarPerfil();
-    }, [usuarioId]);
+            setUsuario((anterior) => ({
+                nome: dados.nome_completo || anterior.nome,
+                nivel,
+                exp: Number(dados.xp ?? anterior.exp),
+                casesConcluidos: dadosResultados.total_concluidos ?? anterior.casesConcluidos,
+            }));
+        } catch (erro) {
+            console.error("Não foi possível atualizar o perfil do lobby:", erro);
+        }
+    };
+
+    carregarPerfil();
+}, [usuarioId]);
 
     // usuario.nivel é o código bruto vindo do backend (ex.: "JUNIOR"); todas as
     // tabelas abaixo são indexadas por esse código. Só convertemos para o
@@ -58,6 +65,7 @@ export default function Lobby() {
     const nivelCodigo = usuario.nivel;
     const usuarioNivel = NIVEL[nivelCodigo] ?? "Estagiário";
     const usuarioExp = usuario.exp;
+    const usuarioCasesConcluidos = usuario.casesConcluidos;
     const usuarioNome = usuario.nome;
     const usuarioProximoNivel = PROXIMO_NIVEL[nivelCodigo] ?? null;
     const caseDificuldade = DIFICULDADE_POR_NIVEL[nivelCodigo] ?? "🟢 Fácil";
@@ -78,7 +86,7 @@ export default function Lobby() {
                 <div className="cards">
                     <CardProfile nivel={usuarioNivel} exp={usuarioExp} nextLevel={usuarioProximoNivel} />
                     <CardCases
-                        num={0}
+                        num={usuarioCasesConcluidos}
                         dificuldade={caseDificuldade}
                         limit={10}
                         usuarioId={usuarioId}
