@@ -85,7 +85,7 @@ async def avaliar_solucao(payload: AvaliacaoPayload):
         # A solução fica registrada e aprovada por padrão, sinalizando que
         # a avaliação da IA não pôde ser concluída.
         nota_media = None
-        aprovado = True
+        aprovado = False
         feedback_texto = FEEDBACK_IA_INDISPONIVEL
         notas_categorias = {categoria: None for categoria in CATEGORIAS_AVALIACAO}
 
