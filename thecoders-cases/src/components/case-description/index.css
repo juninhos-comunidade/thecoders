@@ -186,7 +186,7 @@
 }
 
 .confirmar-entrega-botao--primario {
-    background-color: #79d9ef;
-    color: #213a57;
+    background-color: var(--cor-primaria);
+    color: #ffffff;
     font-weight: 600;
 }

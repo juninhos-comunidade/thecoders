@@ -41,3 +41,10 @@
 .aviso-infracao-card button:hover {
     opacity: 0.9;
 }
+
+@media (max-width: 900px) {
+    .container-oncase {
+        flex-direction: column;
+        min-height: auto;
+    }
+}

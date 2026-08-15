@@ -139,3 +139,21 @@
     text-align: center;
     color: #6B7280;
 }
+
+@media (max-width: 900px) {
+    .side-sheet {
+        width: 100%;
+        max-width: 100%;
+        min-height: 24rem;
+        height: 24rem;
+        border-left: none;
+        border-top: 1px solid #CAC4D0;
+    }
+}
+
+@media (max-width: 480px) {
+    .side-sheet {
+        min-height: 20rem;
+        height: 20rem;
+    }
+}

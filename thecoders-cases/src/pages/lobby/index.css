@@ -4,7 +4,9 @@
 
 .pagina-lobby{
     display: flex;
-    width: 80rem;
+    width: 100%;
+    max-width: 80rem;
+    margin: 0 auto;
     padding-bottom: 14.375rem;
     flex-direction: column;
     align-items: flex-start;
@@ -13,6 +15,7 @@
 
 .container-lobby {
     display: flex;
+    width: 100%;
     padding: 5rem 5.125rem 0 5.125rem;
     flex-direction: column;
     align-items: center;
@@ -42,12 +45,14 @@
 
 .cards {
     display: flex;
+    width: 100%;
     padding: 2rem 0;
     justify-content: center;
     align-items: center;
     gap: 2.5rem;
     align-self: stretch;
     border-top: 1px solid rgba(29, 29, 29, 0.25);
+    flex-wrap: wrap;
 }
 
 .cards > * {
@@ -55,11 +60,43 @@
 }
 
 @media (max-width: 768px) {
+    .pagina-lobby {
+        padding-bottom: 4rem;
+    }
+
     .container-lobby {
+        padding: 7rem 1.5rem 0 1.5rem;
         gap: 1.5rem;
-        padding-top: 7rem; 
+    }
+
+    .h3-lobby {
+        font-size: 1.25rem;
+    }
+
+    .subtitle {
+        font-size: 1.1rem;
+    }
 
     .cards {
         gap: 1.5rem;
+        padding: 1.5rem 0;
     }
-}}
+
+    .cards > * {
+        flex: 1 1 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .container-lobby {
+        padding: 6rem 1rem 0 1rem;
+    }
+
+    .h3-lobby {
+        font-size: 1.1rem;
+    }
+
+    .subtitle {
+        font-size: 1rem;
+    }
+}
