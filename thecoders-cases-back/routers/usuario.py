@@ -14,6 +14,7 @@ def obter_perfil_usuario(usuario_id: str):
         .limit(1)
         .execute()
     )
+    
 
     if not resposta.data:
         raise HTTPException(status_code=404, detail="Usuário não encontrado")
@@ -41,3 +42,22 @@ def marcar_tutorial_visto(usuario_id: str):
         raise HTTPException(status_code=404, detail="Usuário não encontrado")
 
     return {"id": usuario_id, "primeiro_login": False}
+
+@router.get("/{usuario_id}/resultados")
+def obter_resultados_usuario(usuario_id: str):
+    resposta = (
+        supabase.table("resultados")
+        .select("*")
+        .eq("usuario_id", usuario_id)
+        .order("criado_em", desc=True)
+        .execute()
+    )
+
+    concluidos = [linha for linha in resposta.data if linha["nivel_alcancado"] is not None]
+    total_concluidos = len(concluidos)
+    ultimo_resultado = resposta.data[0] if resposta.data else None
+
+    return {
+        "total_concluidos": total_concluidos,
+        "ultimo_resultado": ultimo_resultado,
+    }
