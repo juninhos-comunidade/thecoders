@@ -2,25 +2,31 @@
 
 .pagina-login {
   display: flex;
-  width: 80rem;
-  height: 52rem;
+  width: 100%;
+  max-width: 80rem;
+  min-height: 52rem;
+  margin: 0 auto;
   padding: 5.25rem 6.25rem;
   justify-content: space-between;
   align-items: center;
+  box-sizing: border-box;
 }
 
 .coluna-apresentacao {
   display: flex;
   width: 34.4375rem;
+  max-width: 100%;
   padding: 0 0.75rem;
   flex-direction: column;
   align-items: flex-start;
   gap: 1.5rem;
   flex-shrink: 0;
+  box-sizing: border-box;
 }
 
 .marca {
   width: 17.8125rem;
+  max-width: 100%;
   height: 6.4375rem;
 }
 
@@ -61,11 +67,13 @@
 
 .ilustracao {
   display: flex;
+  max-width: 100%;
   padding: 0 4.5rem;
   flex-direction: column;
   align-items: flex-start;
   gap: 0.625rem;
   align-self: stretch;
+  box-sizing: border-box;
 }
 
 .coluna-login {
@@ -74,6 +82,8 @@
   align-items: center;
   justify-content: center;
   padding: 2rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .card-login {
@@ -273,20 +283,63 @@
 @media (max-width: 900px) {
   .pagina-login {
     flex-direction: column;
+    min-height: auto;
+    padding: 2.5rem 1.5rem;
   }
 
   .coluna-apresentacao {
+    width: 100%;
     max-width: 100%;
     align-items: center;
     text-align: center;
     padding: 2rem 1.5rem;
+    gap: 1rem;
+  }
+
+  .coluna-apresentacao h1 {
+    font-size: 1.75rem;
+    text-align: center;
+    align-items: center;
+  }
+
+  .coluna-apresentacao p {
+    font-size: 1.1rem;
+    text-align: center;
+    align-items: center;
   }
 
   .ilustracao {
     align-self: center;
+    padding: 0 1.5rem;
   }
 
   .coluna-login {
     padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .pagina-login {
+    padding: 1.5rem 1rem;
+  }
+
+  .coluna-apresentacao {
+    padding: 1rem 0.5rem;
+  }
+
+  .coluna-apresentacao h1 {
+    font-size: 1.5rem;
+  }
+
+  .coluna-apresentacao p {
+    font-size: 1rem;
+  }
+
+  .ilustracao {
+    padding: 0;
+  }
+
+  .card-login {
+    padding: 28px 20px;
   }
 }
