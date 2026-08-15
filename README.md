@@ -37,9 +37,9 @@ Após rodar o último comando, o projeto estará disponível em `http://localhos
 
 ## 🔗 Links
 
-- Figma: [link do Figma]
-- Deploy: [link do deploy]
-- Notion: [link do Notion]
+- Figma: [http://www.figma.com/thecoders](https://www.figma.com/design/xk03DfXgICPo7s0HykliQF/TheCoders?node-id=0-1&t=cAJjueXIPFcMMhNE-1)
+- Deploy: http://thecoders-front.onrender.com/
+- Notion: [http://www.notion.so/thecoders](https://app.notion.com/p/PLANEJAMENTO-THECODERS-HACKA-JUNINHOS-75f32116964b8297bdd701a304263997?source=copy_link) 
 
 ## 🤖 Inteligências Artificiais Utilizadas
 
