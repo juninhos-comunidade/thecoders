@@ -12,7 +12,7 @@ O **theCoders Cases** é um simulador de cases em grupo voltado para pessoas ini
 - **Vite** — ferramenta de build e ambiente de desenvolvimento
 - **JavaScript** — linguagem principal do front-end
 - **React Router (react-router-dom)** — navegação entre telas
-- **Axios** — requisições HTTP para o back-end
+- **Fetch API** — requisições HTTP para o back-end
 - **ESLint** — padronização e análise de qualidade do código
 
 ## 💻 Instalação e Execução Local
