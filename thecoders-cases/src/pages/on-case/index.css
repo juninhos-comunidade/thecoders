@@ -4,3 +4,40 @@
     min-height: 52rem;
     align-items: flex-start;
 }
+
+.aviso-infracao-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.aviso-infracao-card {
+    background: #fff;
+    padding: 32px;
+    border-radius: 12px;
+    text-align: center;
+    max-width: 360px;
+}
+
+.aviso-infracao-card p {
+    margin-bottom: 16px;
+    color: var(--cor-primaria);
+}
+
+.aviso-infracao-card button {
+    padding: 10px 24px;
+    border-radius: 8px;
+    border: none;
+    background: var(--cor-primaria);
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.aviso-infracao-card button:hover {
+    opacity: 0.9;
+}

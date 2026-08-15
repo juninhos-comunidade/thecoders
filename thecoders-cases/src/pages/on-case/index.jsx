@@ -193,6 +193,15 @@ export default function OnCase() {
         });
     }, []);
 
+    // Leva o usuário de volta ao lobby manualmente, a partir do aviso de infração
+    const handleVoltarLobby = useCallback(() => {
+        isNavigatingAway.current = true;
+        exitFullscreen();
+        navigate("/lobby", {
+            state: { usuarioId, usuarioNome },
+        });
+    }, [exitFullscreen, navigate, usuarioId, usuarioNome]);
+
     const enterFullscreen = useCallback(() => {
         const el = document.documentElement;
         if (document.fullscreenElement) return;
@@ -305,16 +314,22 @@ export default function OnCase() {
 
     return (
         <div className="container-oncase">
+            {envioBloqueado && (
+                <div className="aviso-infracao-overlay">
+                    <div className="aviso-infracao-card">
+                        <p>Você saiu da tela cheia e perdeu a chance de enviar o arquivo.</p>
+                        <button onClick={handleVoltarLobby}>Voltar ao lobby</button>
+                    </div>
+                </div>
+            )}
+
             <CaseDescription
                 title={currentCase.title}
                 dificulty={currentCase.dificulty}
                 description={currentCase.description}
                 timeLimit={currentCase.timeLimit}
-
                 onSubmitSolution={handleSubmitSolution}
-
                 envioBloqueado={envioBloqueado}
-
             />
 
             <ChatBox messages={[]} user={usuarioNome} />
