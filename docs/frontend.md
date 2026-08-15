@@ -18,14 +18,6 @@ Comunicação com o back-end via `fetch` nativo (não Axios — o README princip
 menciona Axios, mas o projeto usa `fetch` mesmo; vale corrigir o README).
 A URL base da API fica centralizada em `src/config/api.js`.
 
-> ⚠️ **`socket.io-client` conecta num servidor que não existe no repositório.**
-> `OnCase` faz `io("http://localhost:3000")`, mas não há nenhum servidor
-> Socket.IO no back-end (FastAPI puro, sem `python-socketio`) nem um serviço
-> Node separado. Isso significa que os eventos de sincronização entre
-> participantes (`case:redirecionar_lobby`, `case:nova_case`) e a notificação
-> de infração (`case:infracao_detectada`) nunca chegam a lugar nenhum hoje —
-> ver detalhes em [`backend.md`](./backend.md#7-o-que-ainda-falta).
-
 ## 2. Como rodar localmente
 
 ```bash
@@ -122,9 +114,6 @@ bruto (`"ESTAGIARIO"`, `"JUNIOR"`, `"SENIOR"`) é normalizado com
 `padronizarNivel`/`NIVEL_LABEL`/`NIVEL_ABREVIACAO` de `utils/nivel.js` antes
 de virar texto em português ou a letra exibida na `Navbar`.
 
-> ⚠️ `num` (cases concluídos) em `CardCases` está fixo em `0` — ainda não há
-> endpoint para contar quantos cases o usuário já completou.
-
 ### `OnCase` (`/on-case`)
 Tela do case em si — a mais complexa do front-end.
 
@@ -190,11 +179,6 @@ exibido na `Navbar` é buscado à parte via `GET /usuarios/{usuarioId}/perfil`.
 | `Timer` | CaseDescription | Cronômetro circular (SVG) com contagem regressiva e barra de progresso animada |
 | `Score` | LastResult | Tabela de notas por competência (raciocínio lógico, qualidade técnica, etc.) |
 | `Resume` | LastResult | Bloco de feedback textual (HTML) |
-
-> `ChatBox` mostra hoje uma lista fixa de nomes ("Elena entrou na sala",
-> "Eduardo entrou na sala"...) além do nome real do usuário logado (`user`) —
-> conteúdo de exemplo, não vindo de dado real nenhum. Sinalizando pra não
-> confundir com dado de verdade numa revisão de código.
 
 ## 7. Integração com o back-end
 

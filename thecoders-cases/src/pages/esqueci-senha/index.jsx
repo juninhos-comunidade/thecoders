@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import logo from "../../assets/logo.svg";
 import "./index.css";
 
@@ -40,7 +41,7 @@ export default function EsqueciSenha() {
             <button type="submit">Enviar Link</button>
           </form>
 
-          <a href="/">Voltar para o login</a>
+          <Link to="/">Voltar para o login</Link>
         </div>
       </div>
     </div>

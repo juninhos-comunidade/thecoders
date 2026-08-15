@@ -27,13 +27,6 @@ Cadastro/Login → Tutorial (primeiro acesso) → Lobby → Case (cronometrado) 
   `case:nova_case`)
 - ESLint — padronização de código
 
-> ⚠️ **Incompatibilidade de arquitetura:** o `OnCase` conecta em
-> `io("http://localhost:3000")`, mas o back-end real (abaixo) é FastAPI, que
-> não expõe um servidor Socket.IO. Ou essa comunicação em tempo real precisa
-> ser implementada no back-end (ex: com `python-socketio`), ou a tela precisa
-> ser migrada para outra estratégia (polling via REST, Supabase Realtime,
-> etc.). Ver detalhes em [`frontend.md`](./frontend.md#7-integração-com-o-back-end).
-
 **Back-end / API**
 - Python 3 + FastAPI
 - Supabase (Postgres gerenciado) como banco de dados, acessado via `supabase-py`
@@ -90,7 +83,7 @@ da simulação.
 `explicarLGPD()`
 
 ### `Lobby`
-**Não é uma sala** — é o painel pessoal do usuário (a tela `/lobby` do
+Painel pessoal do usuário (a tela `/lobby` do
 front-end): perfil, XP e histórico de resultados. Existe 1:1 com cada
 `Usuario`.
 
@@ -117,11 +110,6 @@ chamávamos de "sala de case" — quem reúne os participantes.
 
 A dificuldade do case é definida automaticamente com base no XP acumulado
 pelo usuário (`definirDificuldadePorXp()`).
-
-> ⚠️ `Sala` já teve `numeroParticipantes` e `participantes: List<Usuario>` em
-> versões anteriores do schema. Esses campos foram removidos direto no
-> Supabase (fora das migrations versionadas) — ver [`backend.md`](./backend.md#4-banco-de-dados)
-> para o schema real atual e a recomendação de regularizar isso numa migration.
 
 ### `Case`
 O desafio propriamente dito, cronometrado.
@@ -154,11 +142,6 @@ Gerado ao final da simulação, com feedback de desempenho apoiado por IA.
 
 **Métodos:** `calcularRespostas()`, `gerarFeedback()`, `exibirAnimacaoNivel()`
 
-> `nivelAlcancado` era um inteiro na escala 0-100 nas primeiras versões do
-> back-end; foi alterado para decimal (0-10) quando o critério de aprovação
-> passou a ser a média das 6 notas por categoria. Detalhes da implementação
-> em [`backend.md`](./backend.md#5-endpoints).
-
 ### Enumerações
 
 **`NivelExpertise`**: `ESTAGIARIO`, `JUNIOR`
@@ -178,15 +161,6 @@ Gerado ao final da simulação, com feedback de desempenho apoiado por IA.
   `Resultado` ao longo do tempo, um por `Sala`/usuário)
 
 ## 4. Diagrama de Classes
-
-> ⚠️ **`/docs/diagrama.png` está desatualizado** — foi gerado antes das
-> alterações feitas direto no Supabase (remoção de `numeroParticipantes`/
-> `participantes` de `Sala`, ajuste de `Resultado` para as 6 notas por
-> categoria). O Mermaid abaixo é a versão atual e deve ser tratado como fonte
-> da verdade até que o PNG seja regenerado. Recomendamos gerar um novo PNG
-> a partir deste bloco (ex: via [mermaid.live](https://mermaid.live)) e
-> substituir o arquivo antigo, ou remover o PNG e manter só o Mermaid — ele
-> já renderiza direto na página do GitHub.
 
 ```mermaid
 classDiagram
@@ -222,8 +196,8 @@ classDiagram
     exibido: boolean
     exibirTutorial()
     explicarNiveis()
-    explicarConfidencialidade()
-    explicarLGPD()
+    explicarConfidencialidade()    
+    explicarLGPD()    
   }
 
   class Sala {
@@ -246,6 +220,7 @@ classDiagram
     abrirChat()
   }
 
+ 
   class Resultado {
     id: UUID
     nivelAlcancado: decimal
@@ -284,11 +259,6 @@ classDiagram
   Sala "1" -- "1" NivelDificuldade : configurada com
   Case "1" -- "0..1" Resultado : gera
 ```
-
-> **Nota:** o chat da sala (`ChatBox` no front-end, tabela `chat_mensagens` no
-> banco) não aparece neste diagrama de domínio — ele existe na implementação
-> mas não foi modelado como classe aqui. Se fizer sentido pro time, vale
-> incluir numa próxima revisão do diagrama.
 
 ## 5. Fluxo da Aplicação
 

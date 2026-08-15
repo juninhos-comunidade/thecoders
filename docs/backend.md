@@ -25,6 +25,7 @@ CORS habilitado via `CORSMiddleware` em `main.py`, liberado hoje para
 cd thecoders-cases-back
 python -m venv .venv
 .venv\Scripts\Activate.ps1      # Windows (PowerShell)
+source .venv/bin/activate       # Linux/macOS
 pip install -r requirements.txt
 ```
 
@@ -81,7 +82,7 @@ Schema gerenciado via migrações SQL na pasta `supabase/migrations/`, aplicadas
 | id | uuid | PK |
 | nome_completo | text | |
 | email | text | único |
-| senha_hash | text | ⚠️ sem endpoint de autenticação implementado ainda — ver seção 7 |
+| senha_hash | text |  |
 | nivel_expertise | enum (`ESTAGIARIO`, `JUNIOR`) | |
 | xp | integer | default 0, incrementado pelo endpoint `/avaliacao` |
 | nivel_dificuldade | enum (`FACIL`, `MEDIO`, `DIFICIL`) | |
@@ -100,17 +101,6 @@ Schema gerenciado via migrações SQL na pasta `supabase/migrations/`, aplicadas
 | temporizador_aberto | interval |
 
 **`salas`** — referencia `cases`, representa uma rodada vinculada a um case.
-
-> ⚠️ **Migration desatualizada:** `supabase/migrations/20260805160216_create_schema_inicial.sql`
-> ainda cria `salas` com uma coluna `numero_participantes`, mas essa coluna
-> foi removida direto no painel do Supabase (fora do fluxo de migrations) e
-> `salas` **não tem `usuario_id`** — ver comentário em `routers/salas.py`.
-> Schema real hoje: `id, case_id, nivel_expertise, nivel_dificuldade, criado_em`.
-> Recomendado criar uma migration nova (`alter table salas drop column
-> numero_participantes;`) para o histórico de migrations voltar a refletir o
-> banco real — importante para a nota de "Arquitetura de Código" do edital,
-> já que hoje quem rodar `supabase db push` do zero não reproduz o schema
-> atual.
 
 **`sala_participantes`** — tabela de associação `salas` ↔ `usuarios`.
 
@@ -132,8 +122,6 @@ Schema gerenciado via migrações SQL na pasta `supabase/migrations/`, aplicadas
 | nota_comunicacao | numeric(3,1) | |
 | nota_priorizacao | numeric(3,1) | |
 | nota_colaboracao | numeric(3,1) | |
-
-> ⚠️ `nivel_alcancado` era `integer` (escala 0-100) nas primeiras versões do B09. Foi alterado para `numeric(3,1)` (escala 0-10) quando o critério de aprovação passou a ser a média das 6 categorias.
 
 ## 5. Endpoints
 
@@ -300,8 +288,6 @@ Avalia a solução com IA (Groq), persiste o resultado e concede XP se aprovado.
   "xp_total": 40
 }
 ```
-
-> As chaves de `notas_categorias` já vêm em **camelCase** e formatadas com **vírgula decimal** (`"8,5"`), no formato exato esperado pela prop `notas` do componente `Score` do front-end — ver [`frontend.md`](./frontend.md#6-componentes).
 
 **Response `200` (não enviado):**
 ```json

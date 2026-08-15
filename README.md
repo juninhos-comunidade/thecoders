@@ -40,7 +40,7 @@ cd thecoders-cases-back
 # criar e ativar o ambiente virtual
 python -m venv .venv
 .venv\Scripts\Activate.ps1      # Windows (PowerShell)
-# source .venv/bin/activate     # Linux/macOS
+source .venv/bin/activate       # Linux/macOS
  
 # instalar dependências
 pip install -r requirements.txt
