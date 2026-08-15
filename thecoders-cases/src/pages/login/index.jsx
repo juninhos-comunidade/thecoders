@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import btnApple from "../../assets/apple.png";
 import btnGoogle from "../../assets/google.png.png";    
@@ -139,10 +139,10 @@ export default function Login() {
 
                     <div className="links-auxiliares">
                         <p>
-                            Esqueceu sua senha? <a href="/recuperar">Recupere</a>
+                            Esqueceu sua senha? <Link to="/recuperar">Recupere</Link>
                         </p>
                         <p>
-                            Não tem uma conta? <a href="/cadastro">Cadastre-se</a>
+                            Não tem uma conta? <Link to="/cadastro">Cadastre-se</Link>
                         </p>
                     </div>
                 </div>
