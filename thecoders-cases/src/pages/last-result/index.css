@@ -17,10 +17,8 @@
 
 .container-last-result{
     display: flex;
-    width: 100%;
-    max-width: 80rem;
-    min-height: 47.5rem;
-    margin: 0 auto;
+    width: 80rem;
+    height: 47.5rem;
     padding: 5rem 5.125rem 0 5.125rem;
     flex-direction: column;
     align-items: flex-start;
@@ -32,13 +30,10 @@
 
 .textos-last-result {
     display: flex;
-    width: 100%;
     padding: 0 1.5rem;
     justify-content: space-between;
     align-items: center;
     align-self: stretch;
-    flex-wrap: wrap;
-    gap: 1rem;
 }
 
 .h3-last-result {
@@ -53,7 +48,6 @@
 
 .cards-last-result {
     display: inline-grid;
-    width: 100%;
     padding: 2rem 0;
     row-gap: 2.5rem;
     column-gap: 40px;
@@ -62,40 +56,4 @@
     grid-template-columns: repeat(2,minmax(0,1fr));
     grid-auto-flow: row;
     border-top: 1px solid rgba(29, 29, 29, 0.25);
-}
-
-.cards-last-result > * {
-    flex: 1 1 280px;
-    min-width: 0;
-}
-
-@media (max-width: 768px) {
-    .container-last-result {
-        gap: 1.5rem;
-        padding: 7rem 1.5rem 2rem 1.5rem;
-    }
-
-    .textos-last-result {
-        padding: 0;
-    }
-
-    .h3-last-result {
-        font-size: 1.25rem;
-    }
-
-    .cards-last-result {
-        grid-template-columns: 1fr;
-        row-gap: 1.5rem;
-        padding: 1.5rem 0;
-    }
-}
-
-@media (max-width: 480px) {
-    .container-last-result {
-        padding: 6rem 1rem 2rem 1rem;
-    }
-
-    .h3-last-result {
-        font-size: 1.1rem;
-    }
 }
