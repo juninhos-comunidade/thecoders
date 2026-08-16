@@ -33,6 +33,11 @@ integradas com a API — ver [`docs/frontend.md`](../docs/frontend.md#7-estado-a
 o back-end (`thecoders-cases-back`) precisa estar rodando em
 `http://127.0.0.1:8000` — veja o [README do backend](../thecoders-cases-back/README.md).
 
+**Usuário de teste** para o login:
+
+- **Email:** `usuario@thecc.com`
+- **Senha:** `hash123`
+
 ## Scripts disponíveis
 
 | Comando | O que faz |

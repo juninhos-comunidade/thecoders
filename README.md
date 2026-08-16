@@ -79,6 +79,13 @@ conversar com o back-end em `http://127.0.0.1:8000` (`src/config/api.js`).
 > endpoints) em [`thecoders-cases-back/README.md`](./thecoders-cases-back/README.md)
 > e em [`docs/backend.md`](./docs/backend.md) / [`docs/frontend.md`](./docs/frontend.md).
 
+## 🔐 Usuário de teste
+
+Para testar o login sem precisar cadastrar um usuário novo:
+
+- **Email:** `usuario@thecc.com`
+- **Senha:** `hash123`
+
 Após rodar o último comando, o projeto estará disponível em `http://localhost:5173`.
 
 ## 🔗 Links
